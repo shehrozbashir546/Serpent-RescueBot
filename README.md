@@ -7,5 +7,5 @@ Group Members
 1) Shehroz Bashir Malik
 2) Hanan Korabi
 3) Cristian Cernat
-4) Dania al Hakim
+4) Dania Al Hakim
 5) Kaloyan Staykov
