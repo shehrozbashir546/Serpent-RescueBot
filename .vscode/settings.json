@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "Task1.C": "cpp"
+        "Task1.C": "cpp",
+        "stdio.h": "c"
     }
 }
