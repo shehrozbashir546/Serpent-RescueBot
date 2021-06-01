@@ -31,6 +31,32 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // THIS IS THE FUNCTION YOU IMPLEMENT
 int move(char *world) {
     // YOUR CODE HERE
+    unsigned int elements = sizeof(world)/sizeof(world[0]);
+    int robot_index;
+    int target_index;
+
+    for(int i = 0; i < elements; ++i) {
+    if (world[i] == 'R') {
+            robot_index = i;
+            break;
+        }
+    }
+    for(int i = 0; i < elements; ++i) {
+    if (world[i] == 'T') {
+            target_index = i;
+            break;
+        }
+    }
+
+    if (target_index > robot_index) {
+        int x = target_index - robot_index;
+        printf("%d HSADKAHDLSHADLKSAHDLKASHDKLSAHDSKALHDSA", x);
+        int line;
+        for (int i=0; i<line;i++) {
+            return 1;
+            break;
+        }
+
     return 1; // REPLACE THE RETURN VALUE WITH YOUR CALCULATED RETURN VALUE
 }
 
