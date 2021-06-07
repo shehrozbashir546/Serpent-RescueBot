@@ -28,34 +28,35 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <stdlib.h>
 
-// copy the array into a new one to get the size
-char world2[200];
-for(int i=0;i<200;i++) {
-    world2[i] =world[i];
-}
-
-unsigned int elements = sizeof(world2)/sizeof(world2[0]);
-int robot_index;
-int target_index;
-int lines=0;
-int width=20;
-
-for(int i = 0; i < elements; ++i) { //index of R
-    if (world2[i] == 'R') {
-        robot_index = i;
-        break;
-    }
-}
-
-for(int i = 0; i < elements; ++i) { //index of T
-    if (world2[i] == 'T') {
-        target_index = i;
-        break;
-    }
-}
 
 
 int move(char *world) {
+    // copy the array into a new one to get the size
+    char world2[200];
+    for(int i=0;i<200;i++) {
+        world2[i] =world[i];
+    }
+
+    unsigned int elements = sizeof(world2)/sizeof(world2[0]);
+    int robot_index;
+    int target_index;
+    int lines=0;
+    int width=20;
+
+    for(int i = 0; i < elements; ++i) { //index of R
+        if (world2[i] == 'R') {
+            robot_index = i;
+            break;
+        }
+    }
+
+    for(int i = 0; i < elements; ++i) { //index of T
+        if (world2[i] == 'T') {
+            target_index = i;
+            break;
+        }
+    }
+
     //if T has bigger position index than R in the array
     if(robot_index < target_index){ 
         //distance between indexes of R and T
