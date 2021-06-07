@@ -1,5 +1,7 @@
 #include "robot_example.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 // IMPLEMET THIS FUNCTION
 // ALLOWED RETURN VALUES:
 // 1: North, 2: East, 3: South, 4: West, 5: Toggle watern/land mode
