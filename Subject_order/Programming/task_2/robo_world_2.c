@@ -28,7 +28,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "robot_example.h"
+#include "robot_serpent.h"
 
 int driving_mode = 0;
 char coming_from = 'O'; // we always start on an empty space
@@ -185,7 +185,7 @@ int main() {
 
     // Set the world to use
     char world[200];
-    memcpy(world, world1, sizeof(world1));
+    memcpy(world, world5, sizeof(world5));
 
     // Initialize target and robot positions
     // Assumes only one target, one robot
