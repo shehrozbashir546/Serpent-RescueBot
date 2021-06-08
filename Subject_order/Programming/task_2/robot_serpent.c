@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 // IMPLEMET THIS FUNCTION
-/* 1. find surroundings of T
-2. add # to closed list, add O to open list indexes
+/* 1. find surroundings of T DONE
+2. add # to closed list, add O to open list indexes DONE
 3. calculate distance of each index in open list to R
 4. shortest distance will stay in list, longest will go away
 5. if index is in the closed array, dont go there
