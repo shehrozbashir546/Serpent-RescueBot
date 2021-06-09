@@ -19,6 +19,8 @@ int closed_list[0]; //array to store all closed node indexes
 struct smallestDistance{
     int index;
     int pathLength;
+    int min;
+    int max;
 };
 
 struct path{
@@ -28,7 +30,7 @@ struct path{
 int distance;
 int lines=0;
 struct path path[200];
-struct smallestDistance smallestDistance[200];//array to store the index and distance from R of the open elements
+struct smallestDistance smallestDistance[10];//array to store the index and distance from R of the open elements
 int open_length = sizeof(open_list)/sizeof(open_list[0]); //length of open list array
 int steps;
 int map_width=21; //width with new lines
@@ -100,16 +102,61 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
                 //calculate the steps of the open elements to robot
                 steps=lines+distance;
                 //printf(" STEPS NEEDED: %d",steps);
-                struct smallestDistance smallestDistance[0];
                 smallestDistance[k].index=open_list[k];
                 smallestDistance[k].pathLength= steps;
-                
-                int length2 = sizeof(smallestDistance)/sizeof(smallestDistance[0]);
-                for (int o=0; o<=length2;o++) {
-                    printf("\nindex: %d \ndistance: %d\n",smallestDistance[k].index,smallestDistance[k].pathLength);
+                int lengthDistance = sizeof(smallestDistance)/sizeof(smallestDistance[0]);
+                for (int o=0; o<=lengthDistance;o++) {
+                    if (smallestDistance[o].index!= 0) {                    
+                    printf("\nindex: %d \ndistance: %d\n",smallestDistance[o].index,smallestDistance[o].pathLength);
+                    int maximum = smallestDistance[0].pathLength;
+                    int minimum = smallestDistance[0].pathLength;
+                    int equal=smallestDistance[0].pathLength;
+                   /* for(int x=1; x<lengthDistance; x++)
+                        {
+                            if(minimum>smallestDistance[x].pathLength)
+                                minimum=smallestDistance[x].pathLength;   
+                            if(maximum<smallestDistance[x])
+                                maximum=smallestDistance[x].pathLength;       
+                        }
+*/
+                    if(smallestDistance[o].pathLength > maximum)
+                    {
+                        maximum = smallestDistance[o].pathLength;
+                    }
+
+                    if(smallestDistance[o].pathLength < minimum)
+                    {
+                        minimum = smallestDistance[o].pathLength;
+                        printf("\nMINIMUM: %d", minimum);
+                    }
+
+                    if (smallestDistance[o].pathLength == minimum || smallestDistance[o].pathLength == maximum){
+                        equal = smallestDistance[o].pathLength;
+                        printf("\nEQUAL: %d", minimum);
+                    }
+                }
+                        
+                   /* else if (smallestDistance[o+1].pathLength == equal) {
+                        equal=smallestDistance[o].pathLength;
+                        int possiblePath=0;
+                        possiblePath++;
+                        printf("\nequal path lengths: %d ", smallestDistance[rand()%possiblePath].pathLength);
+                        
+                    }
+
+                    for(int y = 1 ; y < lengthDistance; y++) {    
+                           printf("CHECK");
+                        if(smallestDistance[o].pathLength == smallestDistance[y].pathLength)    
+                            {printf("\nequal path lengths: %d ", smallestDistance[y].pathLength); }   
+                    }    
+                   */
                 }
                 
-               
+                struct path path[0];
+
+
+
+
                /* for (int h=200; h>=0;h--) {
                     smallestDistance[h] = smallestDistance[h-1];
                     smallestDistance[0]= smallestDistance[steps];   
