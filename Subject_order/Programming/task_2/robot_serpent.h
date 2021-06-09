@@ -5,5 +5,5 @@
 
 // Function declaration
 int move(char *world);
-int safe(char *world,int robot_index, int target_index, int width, int elements);
+int safe(char *world, int target_index, int width);
 #endif // ROBOT_H

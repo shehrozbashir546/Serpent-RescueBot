@@ -14,37 +14,27 @@
 // 1: North, 2: East, 3: South, 4: West, 5: Toggle watern/land mode
 int open_count=0; // amount of nodes in the open table
 int closed_count=0; //amount of nodes in the closed table
-int open_list[0]; //array to store all the open nodes indexes
-int closed_list[0]; //array to store all closed node indexes
-struct smallestDistance{
-    int index;
-    int pathLength;
-    int min;
-    int max;
-};
+int open_list[20]; //array to store all the open nodes indexes
+int closed_list[20]; //array to store all closed node indexes
 
-struct path{
-    int path_index;
-    int path_length;
-};
+
+int path[10];
 int distance;
 int lines=0;
-struct path path[200];
-struct smallestDistance smallestDistance[10];//array to store the index and distance from R of the open elements
 int open_length = sizeof(open_list)/sizeof(open_list[0]); //length of open list array
 int steps;
 int map_width=21; //width with new lines
-
-int safe(char *world,int robot_index, int target_index, int width, int elements) {
-    int rup = robot_index - width - 1;
-    int rdown = robot_index + width + 1;
-    int rleft = robot_index - 1;
-    int rright = robot_index + 1;
-
-    int tup = target_index - width - 1;
-    int tdown = target_index + width + 1;
-    int tleft = target_index - 1;
-    int tright = target_index + 1;
+int check(int open_count,char *world, int target_index, int width){
+    if (open_count == 1){
+        safe(world, target_index,width);
+    }
+}
+int safe(char *world, int target_index, int width) {
+    int fake_target=target_index;
+    int tup = fake_target - width - 1;
+    int tdown = fake_target + width + 1;
+    int tleft = fake_target - 1;
+    int tright = fake_target + 1;
     int tsurround[4] = {tup,tright,tdown,tleft};    
 
     for (int i; i<4; i++){
@@ -55,9 +45,8 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
             }    
             closed_count++;
             /*int length = sizeof(closed_list)/sizeof(closed_list[0]);
-            for (int j=0; j<=length;j++){
-                printf("CLOSED LIST ELEMENTS: %d ", closed_list[j]);
-            }     */     
+            for (int j=0; j<=length;j++){ */ 
+            //}        
         }
 
         else if (world[tsurround[i]] == 'O' || world[tsurround[i]] == '~'){
@@ -65,8 +54,12 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
                 open_list[j] = open_list[j-1];
                 open_list[0]=tsurround[i];   
             }     
-
             open_count++;
+<<<<<<< HEAD
+            int empty = open_list[0];
+            fake_target=empty;
+            printf("\ncheck: %d \n index: %d \n",empty,fake_target);
+=======
 
             for (int k=0; k<=open_length;k++){ //for every open element, calculate distance to R, and the smallest one will stay, rest deleted
                 //printf("OPEN LIST ELEMENTS: %d ", open_list[k]);
@@ -174,21 +167,12 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
        { if(arr[i] > max)
         {
             max = arr[i];
+>>>>>>> 0f524b2c3f722ba07a1aa97900f79f4c026b6c76
         }
-
-        if(arr[i] < min)
-        {
-            min = arr[i];
-        }
-    }
-
-    printf("Maximum element = %d\n", max);
-    printf("Minimum element = %d", min);
-        */    
-    }
-    }     
-    }
+    } 
 }
+
+
 
         /*
         1. make a function that checks which element of the array has the smallest (lines+distance)
@@ -198,9 +182,15 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
         4. repeat the same process
         */
    
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
 void pathLength(char *open_list){
 }
 
+>>>>>>> 0f524b2c3f722ba07a1aa97900f79f4c026b6c76
 int move(char *world) {
     // copy the array into a new one to get the size
     char worldcpy[200];
@@ -231,13 +221,41 @@ int move(char *world) {
     int rdown = robot_index + width + 1;
     int rleft = robot_index - 1;
     int rright = robot_index + 1;
-
+    int rsurround[4] = {rup,rright,rdown,rleft};
+    
+    
+    
     int tup = target_index - width - 1;
     int tdown = target_index + width + 1;
     int tleft = target_index - 1;
     int tright = target_index + 1;
-    int tsurround[4] = {tup,tright,tdown,tleft};
-    int rsurround[4] = {rup,rright,rdown,rleft};
+    int tsurround[4] = {tup,tright,tdown,tleft}; 
+    /* 
+    for (int i; i<4; i++){
+
+        if (world[tsurround[i]] == '#'){
+            for (int j=200; j>=0;j--) {
+                closed_list[j] = closed_list[j-1];
+                closed_list[0]=tsurround[i];
+            }    
+            closed_count++;
+            /*int length = sizeof(closed_list)/sizeof(closed_list[0]);
+            for (int j=0; j<=length;j++){ */ 
+            //}        
+      /*  }
+
+        else if (world[tsurround[i]] == 'O' || world[tsurround[i]] == '~'){
+            for (int j=200; j>=0;j--) {
+                open_list[j] = open_list[j-1];
+                open_list[0]=tsurround[i];   
+            }     
+            open_count++;
+            empty = open_list[0];
+            target_index=empty;
+            printf("\ncheck: %d \n index: %d \n",empty,target_index);
+        }
+    } 
+*/
     //if T has bigger position index than R in the array
     if(robot_index < target_index){ 
         //distance between indexes of R and T
@@ -249,7 +267,6 @@ int move(char *world) {
                 lines++;
             }
         }
-
         //as long as R is above T, go down, until it reaches the same line.
         do {  
             for (int i=0; i<lines;i++) {
@@ -278,7 +295,7 @@ int move(char *world) {
     //if T has smaller position index than R in the array
     else if (robot_index > target_index){
         //distance between indexes of R and T
-        safe(world,robot_index,target_index, width, elements);
+        safe(world,target_index, width);
         int distance = robot_index - target_index;
         //count how many lines between R and T
         for(int i = target_index; i < robot_index; ++i) { 
@@ -292,7 +309,8 @@ int move(char *world) {
                 return 1;
 	        }       
         }
-        while (lines > 0 && rsurround[0] !='#') ; 
+        while (lines > 0 && rsurround[0] =='O') ; 
+
     
         //while R is on the same line of T, go left
         do {
@@ -300,7 +318,7 @@ int move(char *world) {
 	            return 4;
             }
         }
-        while (lines < 1 && distance > 0 && rsurround[3] !='#');
+        while (lines < 1 && distance > 0 && rsurround[3] =='O');
 
         //while R is on same line of T, go right.
         do  {
@@ -308,6 +326,6 @@ int move(char *world) {
 	            return 2;
             }
 	    }
-        while (lines < 1 && distance < 0 && rsurround[1] !='#');
+        while (lines < 1 && distance < 0 && rsurround[1] =='O');
     }
 }
