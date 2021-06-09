@@ -55,119 +55,9 @@ int safe(char *world, int target_index, int width) {
                 open_list[0]=tsurround[i];   
             }     
             open_count++;
-<<<<<<< HEAD
             int empty = open_list[0];
             fake_target=empty;
             printf("\ncheck: %d \n index: %d \n",empty,fake_target);
-=======
-
-            for (int k=0; k<=open_length;k++){ //for every open element, calculate distance to R, and the smallest one will stay, rest deleted
-                //printf("OPEN LIST ELEMENTS: %d ", open_list[k]);
-                lines = 0;
-                //if robot smaller than open item
-                if (robot_index < open_list[k]) {
-                    //calculate vertical distance
-                    for(int i = robot_index; i < open_list[k]; ++i) { 
-                        if (world[i] == '\n') { 
-                            lines++;
-                           // printf("lines when R smaller: %d", lines);
-                        }
-                    }
-                    //distance without lines
-                    distance= abs(open_list[k]-robot_index-(map_width*lines));
-                    //printf(" THIS IS DISTANCE: %d ", distance);
-                }
-
-                //if robot is bigger than open element
-                else if (robot_index > open_list[k]) {
-                    //calculate vertical distance
-                    for(int i = open_list[k]; i < robot_index; ++i) { 
-                        if (world[i] == '\n') {
-                            lines++;                
-                           // printf("lines when R bigger: %d ", lines);
-                        }                
-                    }
-
-                    //horizontal distance
-                    distance= abs(robot_index-open_list[k])-(map_width*lines);
-                    //printf(" THIS IS DISTANCE: %d ", distance);                   
-                }
-                //calculate the steps of the open elements to robot
-                steps=lines+distance;
-                //printf(" STEPS NEEDED: %d",steps);
-                smallestDistance[k].index=open_list[k];
-                smallestDistance[k].pathLength= steps;
-                int lengthDistance = sizeof(smallestDistance)/sizeof(smallestDistance[0]);
-                for (int o=0; o<=lengthDistance;o++) {
-                    if (smallestDistance[o].index!= 0) {                    
-                    printf("\nindex: %d \ndistance: %d\n",smallestDistance[o].index,smallestDistance[o].pathLength);
-                    int maximum = smallestDistance[0].pathLength;
-                    int minimum = smallestDistance[0].pathLength;
-                    int equal=smallestDistance[0].pathLength;
-                   /* for(int x=1; x<lengthDistance; x++)
-                        {
-                            if(minimum>smallestDistance[x].pathLength)
-                                minimum=smallestDistance[x].pathLength;   
-                            if(maximum<smallestDistance[x])
-                                maximum=smallestDistance[x].pathLength;       
-                        }
-*/
-                    if(smallestDistance[o].pathLength > maximum)
-                    {
-                        maximum = smallestDistance[o].pathLength;
-                    }
-
-                    if(smallestDistance[o].pathLength < minimum)
-                    {
-                        minimum = smallestDistance[o].pathLength;
-                        printf("\nMINIMUM: %d", minimum);
-                    }
-
-                    if (smallestDistance[o].pathLength == minimum || smallestDistance[o].pathLength == maximum){
-                        equal = smallestDistance[o].pathLength;
-                        printf("\nEQUAL: %d", minimum);
-                    }
-		    }   
-                   /* else if (smallestDistance[o+1].pathLength == equal) {
-                        equal=smallestDistance[o].pathLength;
-                        int possiblePath=0;
-                        possiblePath++;
-                        printf("\nequal path lengths: %d ", smallestDistance[rand()%possiblePath].pathLength);
-                        
-                    }
-
-                    for(int y = 1 ; y < lengthDistance; y++) {    
-                           printf("CHECK");
-                        if(smallestDistance[o].pathLength == smallestDistance[y].pathLength)    
-                            {printf("\nequal path lengths: %d ", smallestDistance[y].pathLength); }   
-                    }    
-                   */
-                }
-                
-                struct path path[0];
-
-               /* for (int h=200; h>=0;h--) {
-                    smallestDistance[h] = smallestDistance[h-1];
-                    smallestDistance[0]= smallestDistance[steps];   
-                }                  
-                //printf(" \n WRONG STEPS: %d ", steps);
-
-                int length2 = sizeof(smallestDistance)/sizeof(smallestDistance[0]);
-                for (int o=0; o<=length2;o++) {
-                    printf(" distance array: %d",smallestDistance[steps]);
-                }
-                */
-               
-   /* max = arr[0];
-    min = arr[0];
-
-
-    for(i=1; i<size; i++)
-   
-       { if(arr[i] > max)
-        {
-            max = arr[i];
->>>>>>> 0f524b2c3f722ba07a1aa97900f79f4c026b6c76
         }
     } 
 }
@@ -182,15 +72,6 @@ int safe(char *world, int target_index, int width) {
         4. repeat the same process
         */
    
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-void pathLength(char *open_list){
-}
-
->>>>>>> 0f524b2c3f722ba07a1aa97900f79f4c026b6c76
 int move(char *world) {
     // copy the array into a new one to get the size
     char worldcpy[200];
@@ -210,6 +91,7 @@ int move(char *world) {
             break;
         }
     }
+
     for(int i = 0; i < elements; ++i) { //index of T
         if (worldcpy[i] == 'T') {
             target_index = i;
@@ -327,5 +209,7 @@ int move(char *world) {
             }
 	    }
         while (lines < 1 && distance < 0 && rsurround[1] =='O');
+    }
+}es < 1 && distance < 0 && rsurround[1] =='O');
     }
 }
