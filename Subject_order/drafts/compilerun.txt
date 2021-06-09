@@ -1,0 +1,2 @@
+g++ -o program robo_world_2.c robot_serpent.c
+./program

@@ -5,7 +5,7 @@
 // IMPLEMET THIS FUNCTION
 /* 1. find surroundings of T DONE
 2. add # to closed list, add O to open list indexes DONE
-3. calculate distance of each index in open list to R
+3. calculate distance of each index in open list to R DONE
 4. shortest distance will stay in list, longest will go away
 5. if index is in the closed array, dont go there
 6. the path could be purely the order of the open list array, R just follows that path*/
@@ -16,6 +16,13 @@ int open_count=0; // amount of nodes in the open table
 int closed_count=0; //amount of nodes in the closed table
 int open_list[0]; //array to store all the open nodes indexes
 int closed_list[0]; //array to store all closed node indexes
+
+int distance;
+int lines=0;
+int smallestDistance[0];
+int open_length = sizeof(open_list)/sizeof(open_list[0]);
+int steps;
+int map_width=21; //width with new lines
 
 int safe(char *world,int robot_index, int target_index, int width, int elements) {
     int rup = robot_index - width - 1;
@@ -39,54 +46,101 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
             /*int length = sizeof(closed_list)/sizeof(closed_list[0]);
             for (int j=0; j<=length;j++){
                 printf("CLOSED LIST ELEMENTS: %d ", closed_list[j]);
-            }   */
-            
+            }     */     
         }
 
-        else if (world[tsurround[i]] == 'O'){
+        else if (world[tsurround[i]] == 'O' || world[tsurround[i]] == '~'){
+
             for (int j=200; j>=0;j--) {
                 open_list[j] = open_list[j-1];
-                open_list[0]=tsurround[i];
-            }   
+                open_list[0]=tsurround[i];   
+            }     
+
             open_count++;
+
+            for (int k=0; k<=open_length;k++){ //for every open element, calculate distance to R, and the smallest one will stay, rest deleted
+                printf("OPEN LIST ELEMENTS: %d ", open_list[k]);
+                lines = 0;
+                //if robot smaller than open item
+                if (robot_index < open_list[k]) {
+                    //calculate vertical distance
+                    for(int i = robot_index; i < open_list[k]; ++i) { 
+                        if (world[i] == '\n') { 
+                            lines++;
+                           // printf("lines when R smaller: %d", lines);
+                        }
+                    }
+
+                    //distance without lines
+                    distance= abs(open_list[k]-robot_index-(map_width*lines));
+                    //printf(" THIS IS DISTANCE: %d ", distance);
+                }
+
+                //if robot is bigger than open element
+                else if (robot_index > open_list[k]) {
+                    //calculate vertical distance
+                    for(int i = open_list[k]; i < robot_index; ++i) { 
+                        if (world[i] == '\n') {
+                            lines++;                
+                           // printf("lines when R bigger: %d ", lines);
+                        }                
+                    }
+
+                    //horizontal distance
+                    distance= abs(robot_index-open_list[k])-(map_width*lines);
+                    //printf(" THIS IS DISTANCE: %d ", distance);                   
+                }
+                //calculate the steps of the open elements to robot
+                steps=lines+distance;
+                printf(" STEPS NEEDED: %d",steps);
+
+                for (int h=200; h>=0;h--) {
+                    smallestDistance[h] = smallestDistance[h-1];
+                    smallestDistance[0]= smallestDistance[steps];   
+                }                  
+                //printf(" \n WRONG STEPS: %d ", steps);
+
+                int length2 = sizeof(smallestDistance)/sizeof(smallestDistance[0]);
+                for (int o=0; o<=length2;o++) {
+                    printf(" distance array: %d",smallestDistance[steps]);
+                }
+                
+
+                /*
+    max = arr[0];
+    min = arr[0];
+
+
+    for(i=1; i<size; i++)
+    {
+        if(arr[i] > max)
+        {
+            max = arr[i];
+        }
+
+        if(arr[i] < min)
+        {
+            min = arr[i];
         }
     }
-        int distance;
-        int lines=0;
-        int open_length = sizeof(open_list)/sizeof(open_list[0]);
-        for (int j=0; j<=open_length;j++){ //for every element, calculate distance to R, and the smallest one will stay, rest deleted
-            printf("OPEN LIST ELEMENTS: %d ", open_list[j]);
-            distance= abs(robot_index-open_list[j]);
-            /*
-            1. make a function that checks which element of the array has the smallest (lines+distance)
-            note: if they have the same distance, random choose 1.
-            2. remove the rest of the open list items from the list.
-            3. "move" the target to the only item in the list
-            4. repeat the same process
 
+    printf("Maximum element = %d\n", max);
+    printf("Minimum element = %d", min);
             */
-            if (robot_index < open_list[j]) { //if the open list item is bigger than the robot, calculate distance and amount of lines
-                for(int i = robot_index; i < open_list[j]; ++i) { 
-                    printf("TEST");
-                    if (world[i] == '\n') { //how many lines between 
-                        lines++;
-                        printf("lines: %d", lines);
-                    }
-                }
-            }
-            else if (robot_index > open_list[j]) {
-                    for(int i = open_list[j]; i < robot_index; ++i) { 
-                    if (world[i] == '\n') {
-                        printf("TEST3");
-                        lines++;
-                        printf("lines: %d", lines);
-                    }
-                }
-            }
-        }
     }
+    }     
+    }
+}
 
-
+        /*
+        1. make a function that checks which element of the array has the smallest (lines+distance)
+        note: if they have the same distance, random choose 1.
+        2. remove the rest of the open list items from the list.
+        3. "move" the target to the only item in the list
+        4. repeat the same process
+        */
+   
+    
 void pathLength(char *open_list){
 }
 
