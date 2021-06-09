@@ -134,8 +134,7 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
                         equal = smallestDistance[o].pathLength;
                         printf("\nEQUAL: %d", minimum);
                     }
-                }
-                        
+		    }   
                    /* else if (smallestDistance[o+1].pathLength == equal) {
                         equal=smallestDistance[o].pathLength;
                         int possiblePath=0;
@@ -154,9 +153,6 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
                 
                 struct path path[0];
 
-
-
-
                /* for (int h=200; h>=0;h--) {
                     smallestDistance[h] = smallestDistance[h-1];
                     smallestDistance[0]= smallestDistance[steps];   
@@ -168,15 +164,14 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
                     printf(" distance array: %d",smallestDistance[steps]);
                 }
                 */
-
-                /*
-    max = arr[0];
+               
+   /* max = arr[0];
     min = arr[0];
 
 
     for(i=1; i<size; i++)
-    {
-        if(arr[i] > max)
+   
+       { if(arr[i] > max)
         {
             max = arr[i];
         }
@@ -203,7 +198,6 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
         4. repeat the same process
         */
    
-    
 void pathLength(char *open_list){
 }
 
@@ -226,7 +220,6 @@ int move(char *world) {
             break;
         }
     }
-
     for(int i = 0; i < elements; ++i) { //index of T
         if (worldcpy[i] == 'T') {
             target_index = i;
