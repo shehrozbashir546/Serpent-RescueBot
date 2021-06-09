@@ -191,8 +191,7 @@ int move(char *world) {
                 return 1;
 	        }       
         }
-        while (lines > 0 && rsurround[0] =='O') ; 
-
+        while (lines > 0 && rsurround[0] !='#') ; 
     
         //while R is on the same line of T, go left
         do {
@@ -200,7 +199,7 @@ int move(char *world) {
 	            return 4;
             }
         }
-        while (lines < 1 && distance > 0 && rsurround[3] =='O');
+        while (lines < 1 && distance > 0 && rsurround[3] !='#');
 
         //while R is on same line of T, go right.
         do  {
@@ -208,8 +207,6 @@ int move(char *world) {
 	            return 2;
             }
 	    }
-        while (lines < 1 && distance < 0 && rsurround[1] =='O');
-    }
-}es < 1 && distance < 0 && rsurround[1] =='O');
+        while (lines < 1 && distance < 0 && rsurround[1] !='#');
     }
 }
