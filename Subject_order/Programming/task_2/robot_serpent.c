@@ -16,11 +16,20 @@ int open_count=0; // amount of nodes in the open table
 int closed_count=0; //amount of nodes in the closed table
 int open_list[0]; //array to store all the open nodes indexes
 int closed_list[0]; //array to store all closed node indexes
+struct smallestDistance{
+    int index;
+    int pathLength;
+};
 
+struct path{
+    int path_index;
+    int path_length;
+};
 int distance;
 int lines=0;
-int smallestDistance[0];
-int open_length = sizeof(open_list)/sizeof(open_list[0]);
+struct path path[200];
+struct smallestDistance smallestDistance[200];//array to store the index and distance from R of the open elements
+int open_length = sizeof(open_list)/sizeof(open_list[0]); //length of open list array
 int steps;
 int map_width=21; //width with new lines
 
@@ -50,7 +59,6 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
         }
 
         else if (world[tsurround[i]] == 'O' || world[tsurround[i]] == '~'){
-
             for (int j=200; j>=0;j--) {
                 open_list[j] = open_list[j-1];
                 open_list[0]=tsurround[i];   
@@ -59,7 +67,7 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
             open_count++;
 
             for (int k=0; k<=open_length;k++){ //for every open element, calculate distance to R, and the smallest one will stay, rest deleted
-                printf("OPEN LIST ELEMENTS: %d ", open_list[k]);
+                //printf("OPEN LIST ELEMENTS: %d ", open_list[k]);
                 lines = 0;
                 //if robot smaller than open item
                 if (robot_index < open_list[k]) {
@@ -70,7 +78,6 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
                            // printf("lines when R smaller: %d", lines);
                         }
                     }
-
                     //distance without lines
                     distance= abs(open_list[k]-robot_index-(map_width*lines));
                     //printf(" THIS IS DISTANCE: %d ", distance);
@@ -92,9 +99,18 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
                 }
                 //calculate the steps of the open elements to robot
                 steps=lines+distance;
-                printf(" STEPS NEEDED: %d",steps);
-
-                for (int h=200; h>=0;h--) {
+                //printf(" STEPS NEEDED: %d",steps);
+                struct smallestDistance smallestDistance[0];
+                smallestDistance[k].index=open_list[k];
+                smallestDistance[k].pathLength= steps;
+                
+                int length2 = sizeof(smallestDistance)/sizeof(smallestDistance[0]);
+                for (int o=0; o<=length2;o++) {
+                    printf("\nindex: %d \ndistance: %d\n",smallestDistance[k].index,smallestDistance[k].pathLength);
+                }
+                
+               
+               /* for (int h=200; h>=0;h--) {
                     smallestDistance[h] = smallestDistance[h-1];
                     smallestDistance[0]= smallestDistance[steps];   
                 }                  
@@ -104,7 +120,7 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
                 for (int o=0; o<=length2;o++) {
                     printf(" distance array: %d",smallestDistance[steps]);
                 }
-                
+                */
 
                 /*
     max = arr[0];
@@ -126,7 +142,7 @@ int safe(char *world,int robot_index, int target_index, int width, int elements)
 
     printf("Maximum element = %d\n", max);
     printf("Minimum element = %d", min);
-            */
+        */    
     }
     }     
     }
