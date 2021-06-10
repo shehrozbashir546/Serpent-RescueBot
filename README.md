@@ -5,7 +5,7 @@
 about the product 
 
 
-# How our product works
+## How our product works
 
 It uses a combination of sensors to pinpoint the location of a victim. Using IR and Temperature sensors to produce a heat map of an area that allows the user to identify points of danger. In addition, it incorporates a speaker and microphone to directly communicate with a survivor, allowing the user to assess their condition. 
 
