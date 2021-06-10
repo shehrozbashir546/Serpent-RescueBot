@@ -11,7 +11,7 @@ It uses a combination of sensors to pinpoint the location of a victim. Using IR 
 
 
 
-# Product Target Group 
+## Product Target Group 
 
 Serpent assists in rescue after environmental disasters, such as:
 
@@ -22,7 +22,7 @@ Hurricanes
 
 
 
-# Components  
+## Components  
 
 ![Component Diagram](https://user-images.githubusercontent.com/67482490/121577429-cc00b380-ca29-11eb-9396-5e8f45caaf4c.png)
 
