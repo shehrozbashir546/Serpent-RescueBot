@@ -25,7 +25,6 @@ Hurricanes
 
 
 
-#
 
 
 
@@ -54,14 +53,6 @@ Hurricanes
 
 
 
+ Dania Al Hakim, Hanan Korabi, Cristian Cernat, Shehroz Bashir Malik & Kaloyan Staykov | System Engineering |Prof. Dr. Stefan Henkler , Dipl. Des Gido Wahrmann & Dipl.-Wirt.-Inf.Kristian Rother | Hochschule Hamm-Lippstadt | Summer Semester 2021
 
 
-HSHL Electronic Engineering - 4th Semester
-
-Group Members
-
-1) Shehroz Bashir Malik
-2) Hanan Korabi
-3) Cristian Cernat
-4) Dania Al Hakim
-5) Kaloyan Staykov
