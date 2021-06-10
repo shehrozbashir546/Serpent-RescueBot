@@ -5,13 +5,13 @@
 about the product 
 
 
-### How Our Bot Works:
+### How Our Bot Works
 
 It uses a combination of sensors to pinpoint the location of a victim. Using IR and Temperature sensors to produce a heat map of an area that allows the user to identify points of danger. In addition, it incorporates a speaker and microphone to directly communicate with a survivor, allowing the user to assess their condition. 
 
 
 
-### Product Use:
+### Product Use
 
 Serpent assists in rescue after environmental disasters, such as:
 
@@ -22,7 +22,7 @@ Hurricanes
 
 
 
-### Components:
+### Architecture
 
 ![Component Diagram](https://user-images.githubusercontent.com/67482490/121577429-cc00b380-ca29-11eb-9396-5e8f45caaf4c.png)
 
