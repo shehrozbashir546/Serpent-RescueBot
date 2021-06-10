@@ -19,7 +19,7 @@ Hurricanes
 
 
 
-# component list 
+# Component list 
 
 
 
