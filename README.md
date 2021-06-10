@@ -2,7 +2,11 @@
 # Serpent Rescue Bot
 
 
-about the product 
+Natural disasters are an ever-occuring phenomenon. They are the bane of nations living on tectonic plate ridges, where earthquakes and tsunamis sadly cost lives too often. Rescuing victims from ruins is a very time consuming task in a situation where time is of the essence. Technology has helped in many ways, be it on the frontline by preventing floods (dams) or aftermath, excavating rubble to find stuck people. With the rise of robotics in the past decades, rescue missions have become much more efficient with time and resources, resulting in less casualties.
+
+We and our product seek to help this rise, by cutting most of the human element off the searching for victims. That way, the main focus can shift to the rescue itself using heavier machinery. Precise locating is achieved by traversing through rugged terrains, dry or wet, crawling into building ruins, and overall reaching otherwise inaccessible to people places. Control can be either manual or automatic, the latter of which uses sophisticated algorithms involving the sensors and cameras.
+
+Targeted towards goverments' rescue teams, it is easy to learn and use.
 
 
 ### How Our Bot Works
