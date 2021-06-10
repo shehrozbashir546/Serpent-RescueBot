@@ -6,9 +6,6 @@ Natural disasters are an ever-occuring phenomenon. They are the bane of nations 
 
 We and our product seek to help this rise, by cutting most of the human element off the searching for victims. That way, the main focus can shift to the rescue itself using heavier machinery. Precise locating is achieved by traversing through rugged terrains, dry or wet, crawling into building ruins, and overall reaching otherwise inaccessible to people places. Control can be either manual or automatic, the latter of which uses sophisticated algorithms involving the sensors and cameras.
 
-Targeted towards goverments' rescue teams, it is easy to learn and use.
-
-
 ### How Our Bot Works
 
 It uses a combination of sensors to pinpoint the location of a victim. Using IR and Temperature sensors to produce a heat map of an area that allows the user to identify points of danger. In addition, it incorporates a speaker and microphone to directly communicate with a survivor, allowing the user to assess their condition. 
