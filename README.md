@@ -1,3 +1,4 @@
+
 # Serpent Rescue Bot
 
 
@@ -23,7 +24,7 @@ Hurricanes
 
 # Component list 
 
-
+![Component Diagram](https://user-images.githubusercontent.com/67482490/121577429-cc00b380-ca29-11eb-9396-5e8f45caaf4c.png)
 
 
 
