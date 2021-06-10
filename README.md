@@ -13,12 +13,13 @@ It uses a combination of sensors to pinpoint the location of a victim. Using IR 
 
 ### Product Use
 
+Our product is targeted towards government bodies and front line entities, It is made to function in high danger areas which are sealed off to the general public.
 Serpent assists in rescue after environmental disasters, such as:
 
-Earthquakes
-Tsunamis
-Cyclones
-Hurricanes
+* Earthquakes
+* Tsunamis
+* Cyclones
+* Hurricanes
 
 
 
