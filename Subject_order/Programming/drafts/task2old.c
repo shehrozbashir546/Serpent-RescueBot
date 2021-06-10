@@ -2,43 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
+
 // ALLOWED RETURN VALUES:
 // 1: North, 2: East, 3: South, 4: West, 5: Toggle watern/land mode
-void Avoid(int avoidLocation)
-{
-    avoid[counter] = avoidLocation; //mark location that surrounded by obstacle
-    counter++;
+int history(){
+    printf("COMING FROM: %d", coming_from); 
 }
 
-int forbidden(int location){
-    for (int count = 0; avoid[count] != '\0'; count++)
-    {
-        if (location == avoid[count])
-        {
-            return true;//(cannot go to the location)
-        }
+int norepeat(int robot_index, int target_index, int distance){
+        if (robot_index>target_index && distance)
     }
-    return false;
-}
-
-int  ifToChange(char nextSurface)
-{
-    
-    if (nextSurface == '~'&& onLand == 1 )//change to move on water mood
-    {
-        onLand = 0;
-        onWater = 1;
-        return CHANGE;
-    }
-    if (nextSurface == 'O' && onWater == 1 )//change to move on land mood
-    {
-        onLand = 1;
-        onWater = 0;
-        return CHANGE;
-    }
-    return 0;//no change
-}
 int move(char *world) {
     // copy the array into a new one to get the size
     char worldcpy[200];
@@ -78,10 +51,10 @@ int move(char *world) {
     int tright = target_index + 1;
     int tsurround[4] = {tup,tright,tdown,tleft}; 
 
-    int mdown=0;
-    int mup=0;
-    int mleft=0;
-    int mright=0;
+    int countdown=0;
+    int countup=0;
+    int countleft=0;
+    int countright=0;
 
     //if T has bigger position index than R in the array
     if(robot_index < target_index){ 
@@ -93,68 +66,51 @@ int move(char *world) {
                 lines++;
             }
         }
+
         //DOWN
-        if (lines>0 && NoVertical == false){  
+        if (lines > 0){  
             printf("DOWN %d", lines);
-            if (world[rdown] == '#' || forbidden(rdown)) {
-                if (((world[rright]) == '#' || forbidden(rright)) && (world[rleft] == '#' || forbidden(rleft))){
-                    Avoid(robot_index);
-                    mleft=0;
-                    mright=0;
-                    if(ifToChange(world[rup])){
-                        return drivemode;
+            if (world[rdown] == 'O') {
+                return 3;
+            }
+            else if (world[rdown]=='#'){
+                // if there is obstacle below R, and the left is free, check how many steps it would take to go left and then down
+                if(world[rdown] == '#' && world[rleft] == 'O'){
+                    for(int i =rleft + width; i >= elements; i+width+1) {
+                        countleft++;
+                        if (world[i] == 'O') break;
                     }
-                    return up;
                 }
-            }
-            else  if ((world[rright]== '#' || forbidden(rright)) && (world[rleft] != '#')){
-
-                mright=0;
-                mleft=1;
-                Avoid(robot_index);
-            }
-
-            else  if ((world[rleft]== '#' || forbidden(rleft)) && (world[rright != '#')){
-
-                mright=1;
-                mleft=0;
-                Avoid(robot_index);
-            }
 
                 //same but for right
-            else if (world[rright] != '#' || AvoidLocationChecker(rright) != true) mright = 1;
-            else if (world[rleft] != '#' || AvoidLocationChecker(rleft) != true) mleft = 1;
-            }
-
-            //action
-            if (mright == 1)
-            {
-                //check for method change
-                if (ifToChange(world[rright]))
-                {
-                    return drivemode;
+                if(world[rdown] == '#' && world[rright] == 'O'){
+                    for(int i =(rleft + width +2); i >= elements; (i+width+1)) {
+                        countright++;
+                        if (world[i] == 'O') {
+                        break;
+                        }
+                    }
                 }
-                return right;
 
-            }
-            else if (mLeft == 1)
-            {
-                //check for method change
-                if (ifToChange(world[rleft]))
-                {
-                    return drivemode;
+                //if it takes less steps to go left, or its the same as right, go left then down
+                if (countleft < countright || countleft == countright) {
+                    do{return 4;}
+                    while(world[rdown] == '#' && world[rleft] == 'O');
+
+                    for (int i=0; i<countleft;i++){
+                        return 3;
+                    }
                 }
-                return left;
-            }     
-            //when no obstacles:
-            mleft=0;
-            mright=0;
-            noHorizontal=0;
-
-            if(ifToChange(world[rup])) return drivemode;
-            return down;
+                //if it takes less steps to go right then down, do it
+                if (countleft > countright ) {
+                    do{return 2;}
+                    while(world[rup] == '#' && world[rright] == 'O');
+                    for (int i=0; i<countright;i++){
+                        return 3;
+                    }
+                }
+            }
         }
-        else NoVertical = 1;
         
         //RIGHT
         do {printf("RIGHT but R<T %d", lines);

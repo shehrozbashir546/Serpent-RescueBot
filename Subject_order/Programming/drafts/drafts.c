@@ -26,7 +26,7 @@ int map_width=21; //width with new lines
 int safe(char *world, int target_index, int width, int elements) {
     
 
-    int fake_target=target_index;
+    int fake_target=target_index; 
     int ftup = fake_target - width - 1;
     int ftdown = fake_target + width + 1;
     int ftleft = fake_target - 1;
