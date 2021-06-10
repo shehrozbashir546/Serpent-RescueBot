@@ -11,7 +11,7 @@ It uses a combination of sensors to pinpoint the location of a victim. Using IR 
 
 
 
-# Product use
+# Product Target Group 
 
 Serpent assists in rescue after environmental disasters, such as:
 
