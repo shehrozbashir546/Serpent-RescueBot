@@ -1,4 +1,60 @@
-# Systems-Engineering
+# Serpent Rescue Bot
+
+# Product use
+
+
+Serpent assists in rescue after environmental disasters, such as:
+
+Earthquakes
+Tsunamis
+Cyclones
+Hurricanes
+
+
+
+# How our product works
+
+
+
+
+
+
+# component list 
+
+
+
+
+
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 HSHL Electronic Engineering - 4th Semester
 
