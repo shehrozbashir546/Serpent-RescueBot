@@ -290,8 +290,6 @@ int move(char *world) {
             //check if its blocked from up and down, add to blacklist if yes.
             if ((world[rup] == '#' || forbidden(rup)) && (world[rdown]=='#' || forbidden(rdown))){ 
                 blacklist(robot_index);
-                mup = 0 ;
-                mdown = 0;
                 if (driveMode(world[rleft])) return drivemode;
                 return right;
             }
