@@ -86,7 +86,7 @@ int move(char *world) {
     int countright=0;
 
     checkpoint:
-    //if T has bigger vertical position index than R in the array
+    //if T has bigger y position index than R in the array
     if((vR-vT) > 0 && NoVertical == false){ 
         printf("going up! \n");
         //if there is an obstacle above R
@@ -94,43 +94,42 @@ int move(char *world) {
             //check for obstacles on both sides too (if its cornered) and add it to the blacklist if yes
             if (((world[rleft]) == '#' || forbidden(rleft)) && (world[rright] == '#' || forbidden(rright))){
                 blacklist(robot_index);
-                if(driveMode(world[rup])) return drivemode; //change to water if water detected
+                if(driveMode(world[rdown])) return drivemode; //change to water if water detected
                 return down; //go down
             }
 
-            //if both right and left are free, mark them both available
+            //if both right and left are free, check how long it would take to go that direction then up
             else if (world[rright] != '#' || forbidden(rright) == false) {
+                //loop goes on till the first O is found starting right up
                 for( int i =(rright - width); i < 1; (i-width-1)) {
                     countright++;
-                    if (world[i] == 'O') {
-                    break;
-                    }
+                    if (world[i] == 'O') break;
                 }
             }
 
             else if (world[rleft] != '#' || forbidden(rleft) == false) {
                  for( int i =(rleft - width - 2); i <1; (i-width-1)) {
                         countleft++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
+                        if (world[i] == 'O') break;
                     }
             }
             
             //if it takes less steps to go left, or its the same as right, go left then up
             if (countleft < countright || countleft == countright) {
+                //go left until up is clear
                 do{
-                    if (driveMode(world[rright])) return drivemode;
+                    if (driveMode(world[rleft])) return drivemode;
                     return left;
                 }
                 while(world[rleft] == 'O' || world[rleft] == '~');
-
+                //move up according to count
                 for (int i=0; i<countleft;i++){
                     return up;
                 }
             }
             //if it takes less steps to go right then up, do it
             if (countleft > countright ) {
+                //go right until up is clear
                 do{ 
                     if (driveMode(world[rright])) return drivemode;
                     return right;
@@ -161,8 +160,10 @@ int move(char *world) {
                 if(driveMode(world[rup])) return drivemode; //check for water
                 return up; //go up
             }
-        
+
+            //if obstacle down and right is clear
             if (world[rright] != '#' || forbidden(rright) == false) {
+                //check for opening down then right
                 for(int i =rright+width+1; i > 200; (i+width+1)) {
                     countright++;
                     if (world[i] == 'O') break;
@@ -206,7 +207,7 @@ int move(char *world) {
         }
         //when no obstacles:
         noHorizontal=0;
-        if(driveMode(world[rup])) return drivemode;
+        if(driveMode(world[rdown])) return drivemode;
         return down;   
     }
     
@@ -225,7 +226,7 @@ int move(char *world) {
             }
 
 
-            //if both available mark them both available
+        
             if(world[rdown] != '#' || forbidden(rdown) != true) {
                 countdown=0;
                 for( int i = rdown+1; i > 200; i++) {
