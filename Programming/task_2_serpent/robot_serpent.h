@@ -7,9 +7,6 @@
 #define left 4 
 #define drivemode 5
 
-static int mleft = 0, mright = 0;
-static int mup = 0, mdown = 0;
-
 static int NoVertical= 0, noHorizontal = 0;
 
 static int water = 0, land = 1;

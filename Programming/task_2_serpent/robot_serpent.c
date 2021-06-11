@@ -152,7 +152,7 @@ int move(char *world) {
 
     //DOWN
     if ((vR-vT) < 0 && NoVertical == false){  
-        printf("DOWN");
+        printf("going down!\n");
         //if there is an obstacle below R
         if (world[rdown] == '#' || forbidden(rdown)) {
             //check if it is cornered from the sides, if yes add to blacklist.
@@ -215,7 +215,7 @@ int move(char *world) {
     //RIGHT
     if((hR-hT) < 0 && noHorizontal == false) {
         //if right is blocked
-        printf("RIGHT");
+        printf("going right!\n");
         if(world[rright]=='#' || forbidden(rright)){
             //if blocked from up and down too, add to blacklist and go left
             if ((world[rup] == '#' || forbidden(rup)) && (world[rdown]=='#' || forbidden(rdown))){ 
@@ -284,7 +284,7 @@ int move(char *world) {
 
     //LEFT
     else if ((hR-hT) > 0 && noHorizontal == 0)  {
-        printf("MOVING LEFT");
+        printf("going left!\n");
         //if left blocked 
         if(world[rleft]=='#' || forbidden(rleft)){
             //check if its blocked from up and down, add to blacklist if yes.
