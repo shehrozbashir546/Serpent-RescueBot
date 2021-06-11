@@ -5,24 +5,22 @@
 #define right 2
 #define down 3
 #define left 4 
-#define CHANGE 1
 #define drivemode 5
 
-
-static int moveLeft = 0, moveRight = 0;
-static int moveUp = 0, moveDown = 0;
+static int mleft = 0, mright = 0;
+static int mup = 0, mdown = 0;
 
 static int NoVertical= 0, noHorizontal = 0;
 
-static int onWater = 0, onLand = 1;//the robot start on land
+static int water = 0, land = 1;
 
-static int avoid[200];
+static int forbiddenlist[200];
 static int counter = 0;
 
 // Function declaration
-void Avoid(int avoidLocation);
-int forbidden(int location);
+void blacklist(int blacklisted);
+int forbidden(int forbidden);
 int move(char* world);
-int  ifToChange(char nextSurface);
+int driveMode(char infront);
 //int safe(char *world, int target_index, int width, int elements);
 #endif // ROBOT_H

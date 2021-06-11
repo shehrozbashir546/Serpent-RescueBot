@@ -5,13 +5,7 @@
 
 // ALLOWED RETURN VALUES:
 // 1: North, 2: East, 3: South, 4: West, 5: Toggle watern/land mode
-int history(){
-    printf("COMING FROM: %d", coming_from); 
-}
 
-int norepeat(int robot_index, int target_index, int distance){
-        if (robot_index>target_index && distance)
-    }
 int move(char *world) {
     // copy the array into a new one to get the size
     char worldcpy[200];
@@ -70,10 +64,8 @@ int move(char *world) {
         //DOWN
         if (lines > 0){  
             printf("DOWN %d", lines);
-            if (world[rdown] == 'O') {
-                return 3;
-            }
-            else if (world[rdown]=='#'){
+
+            if (world[rdown]=='#'){
                 // if there is obstacle below R, and the left is free, check how many steps it would take to go left and then down
                 if(world[rdown] == '#' && world[rleft] == 'O'){
                     for(int i =rleft + width; i >= elements; i+width+1) {
@@ -110,15 +102,17 @@ int move(char *world) {
                     }
                 }
             }
+
+            if (world[rdown] == 'O') {
+                return 3;
+            }
         }
         
         //RIGHT
         do {printf("RIGHT but R<T %d", lines);
-            if(world[rright]=='O'){
-                 return 2;
-            }
 
-            else if (world[rright] == '#'){
+
+            if (world[rright] == '#'){
                 //if right is blocked: look for an opening after going down and right, and count how many steps
                 if(world[rright] == '#' && world[rdown] == 'O'){
                     //loop down right until an O is found
@@ -171,15 +165,16 @@ int move(char *world) {
                     }
                 }
             }
+            if(world[rright]=='O'){
+                 return 2;
+            }
         }
         while (lines < 1 && distance > 0);
 
         //LEFT
         do  {printf("LEFT but R<T %d", lines); 
-            if (world[rleft]=='O'){
-                    return 4;
-            }
-            else if (world[rleft] == '#'){
+
+            if (world[rleft] == '#'){
                 //if left is blocked: look for an opening after going down and left, and count how many steps
                 if(world[rleft] == '#' && world[rdown] == 'O'){
                     //loop down left until an O is found
@@ -232,6 +227,9 @@ int move(char *world) {
                     }
                 }
             }
+            if (world[rleft]=='O'){
+                    return 4;
+            }
 	    }
         while (lines < 1 && distance < 0);
     }
@@ -261,11 +259,8 @@ int move(char *world) {
         if(lines>0) { 
             printf("UP %d\n", lines);
             //go up until there is obstacle above R
-            if (world[rup] == 'O') {
-                 return 1;
-            }
 
-            else if (world[rup] == '#'){
+            if (world[rup] == '#'){
                 // if there is obstacle above R, and the left is free, check how many steps it would take to go left and then up
                 if(world[rup] == '#' && world[rleft] == 'O'){
                     for( int i =(rleft - width - 2); i >= elements; (i-width-1)) {
@@ -303,6 +298,10 @@ int move(char *world) {
                     }
                 }
             }
+            if (world[rup] == 'O') {
+                 return 1;
+            }
+
         }
 
       
@@ -310,10 +309,8 @@ int move(char *world) {
         //LEFT
         do {
             printf("LEFT %d\n", lines);
-            if (world[rleft]=='O'){
-                return 4;
-            }
-            else if (world[rleft]=='#'){
+
+            if (world[rleft]=='#'){
                 //if left is blocked: look for an opening after going down and left, and count how many steps
                 if(world[rleft] == '#' && world[rdown] == 'O'){
                     //loop down left until an O is found
@@ -366,15 +363,16 @@ int move(char *world) {
                     }
                 }
             }
+            if (world[rleft]=='O'){
+                return 4;
+            }
         }
         while (lines ==0 && distance > 0);
 
         //RIGHT
         do  {printf("RIGHT %d\n", lines);
-            if (world[rright]== 'O'){
-                return 2;
-            }
-            else if (world[rright]=='#'){
+
+           if (world[rright]=='#'){
             //if rright is blocked: look for an opening after going down and right, and count how many steps
                 if(world[rright] == '#' && world[rdown] == 'O'){
                     //loop down right until an O is found
@@ -426,6 +424,9 @@ int move(char *world) {
                         return 2;
                     }
                 }
+            }
+                        if (world[rright]== 'O'){
+                return 2;
             }
 	    }
         while (lines ==0 && distance < 0);

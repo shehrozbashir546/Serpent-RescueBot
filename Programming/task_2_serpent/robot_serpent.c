@@ -5,40 +5,36 @@
 #include <stdbool.h>
 // ALLOWED RETURN VALUES:
 // 1: North, 2: East, 3: South, 4: West, 5: Toggle watern/land mode
-void Avoid(int avoidLocation)
-{
-    avoid[counter] = avoidLocation; //mark location that surrounded by obstacle
+void blacklist(int blacklisted){
+    forbiddenlist[counter] = blacklisted; //mark location that surrounded by obstacle
     counter++;
 }
 
-int forbidden(int location){
-    for (int count = 0; avoid[count] != '\0'; count++)
-    {
-        if (location == avoid[count])
-        {
-            return true;//(cannot go to the location)
-        }
+int forbidden(int forbiddenLocation){
+    //for loop checks if location is in forbiddenlist array.
+    for (int i = 0; forbiddenlist[i] != '\0'; i++){
+        if (forbiddenLocation == forbiddenlist[i]) return true; //location blacklisted
     }
     return false;
 }
 
-int  ifToChange(char nextSurface)
-{
-    
-    if (nextSurface == '~'&& onLand == 1 )//change to move on water mood
-    {
-        onLand = 0;
-        onWater = 1;
-        return CHANGE;
+int  driveMode(char infront){
+    //if robot is on land, and in front of it is water, driveMode == true
+    if (infront == '~' && land){
+        land = 0;
+        water = 1;
+        return true;
     }
-    if (nextSurface == 'O' && onWater == 1 )//change to move on land mood
-    {
-        onLand = 1;
-        onWater = 0;
-        return CHANGE;
+
+    if (infront == 'O' && water){
+        land = 1;
+        water = 0;
+        return true;
     }
-    return 0;//no change
+
+    return false;
 }
+
 int move(char *world) {
     // copy the array into a new one to get the size
     char worldcpy[200];
@@ -72,406 +68,243 @@ int move(char *world) {
     int rright = robot_index + 1;
     int rsurround[4] = {rup,rright,rdown,rleft};
 
-    int tup = target_index - width - 1;
-    int tdown = target_index + width + 1;
-    int tleft = target_index - 1;
-    int tright = target_index + 1;
-    int tsurround[4] = {tup,tright,tdown,tleft}; 
+    int hT; //horizontal T
+    int vT; //vertical T
+    int hR; //horizontal R;
+    int vR; //vertical R
+    //calculate horizontal and vertical T position
+    hT = target_index % 21;
+    vT = (target_index / 21) + 2;
+
+    //calculate horizontal and vertical R position
+    hR = robot_index % 21;
+    vR = (robot_index / 21) + 2;
 
     int mdown=0;
     int mup=0;
     int mleft=0;
     int mright=0;
 
-    //if T has bigger position index than R in the array
-    if(robot_index < target_index){ 
-        //distance between indexes of R and T
-        int distance = target_index - robot_index;	 
-        //count how many lines between R and T
-        for(int i = robot_index; i < target_index; ++i) { 
-            if (world[i] == '\n') {
-                lines++;
+    checkpoint:
+    //if T has bigger vertical position index than R in the array
+    if((vR-vT) > 0 && NoVertical == false){ 
+        printf("going up! \n");
+        //if there is an obstacle above R
+        if (world[rup] == '#' || forbidden(rup)) { 
+            //check for obstacles on both sides too (if its cornered) and add it to the blacklist if yes
+            if (((world[rleft]) == '#' || forbidden(rleft)) && (world[rright] == '#' || forbidden(rright))){
+                blacklist(robot_index);
+                mleft=0;
+                mright=0;
+                if(driveMode(world[rup])) return drivemode; //change to water if water detected
+                return down; //go down
             }
-        }
-        //DOWN
-        if (lines>0 && NoVertical == false){  
-            printf("DOWN %d", lines);
-            if (world[rdown] == '#' || forbidden(rdown)) {
-                if (((world[rright]) == '#' || forbidden(rright)) && (world[rleft] == '#' || forbidden(rleft))){
-                    Avoid(robot_index);
-                    mleft=0;
-                    mright=0;
-                    if(ifToChange(world[rup])){
-                        return drivemode;
-                    }
-                    return up;
-                }
-            }
-            else  if ((world[rright]== '#' || forbidden(rright)) && (world[rleft] != '#')){
+        
 
+            //if right is blocked, but left is free, move left then add to blacklist.
+            else  if ((world[rright]== '#' || forbidden(rright)) && (world[rleft] != '#')){
                 mright=0;
                 mleft=1;
-                Avoid(robot_index);
+                blacklist(robot_index);
             }
 
-            else  if ((world[rleft]== '#' || forbidden(rleft)) && (world[rright != '#')){
-
+            //if left is blocked but right is free, move right then add to blacklist
+            else if ((world[rleft]== '#' || forbidden(rleft)) && (world[rright] != '#')){
                 mright=1;
                 mleft=0;
-                Avoid(robot_index);
+                blacklist(robot_index);
             }
 
-                //same but for right
-            else if (world[rright] != '#' || AvoidLocationChecker(rright) != true) mright = 1;
-            else if (world[rleft] != '#' || AvoidLocationChecker(rleft) != true) mleft = 1;
-            }
-
-            //action
-            if (mright == 1)
-            {
-                //check for method change
-                if (ifToChange(world[rright]))
-                {
-                    return drivemode;
-                }
+            //if both right and left are free, mark them both available
+            else if (world[rright] != '#' || forbidden(rright) == false) mright = 1;
+            else if (world[rleft] != '#' || forbidden(rleft) == false) mleft = 1;
+                
+            //pick if left or right
+            if (mright == 1){
+                if (driveMode(world[rright])) return drivemode;
                 return right;
-
             }
-            else if (mLeft == 1)
-            {
+
+            else if (mleft == 1){
                 //check for method change
-                if (ifToChange(world[rleft]))
-                {
-                    return drivemode;
-                }
+                if (driveMode(world[rleft])) return drivemode;
                 return left;
-            }     
-            //when no obstacles:
-            mleft=0;
-            mright=0;
-            noHorizontal=0;
-
-            if(ifToChange(world[rup])) return drivemode;
-            return down;
+            }    
         }
-        else NoVertical = 1;
         
-        //RIGHT
-        do {printf("RIGHT but R<T %d", lines);
-            if(world[rright]=='O'){
-                 return 2;
-            }
+        //when no obstacles:
+        mleft=0;
+        mright=0;
+        noHorizontal=0;
+        if(driveMode(world[rup])) return drivemode;
+        return up;
+    }   
 
-            else if (world[rright] == '#'){
-                //if right is blocked: look for an opening after going down and right, and count how many steps
-                if(world[rright] == '#' && world[rdown] == 'O'){
-                    //loop down right until an O is found
-                    for( int i = rdown+1; i <= width; i++) {
-                        countdown++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                   // printf("it took me %d steps down right to find an O!", countdown);
-                }
-
-                //if right is blocked: look for an opening after going up then right, and count how many steps
-                if(world[rright] == '#' && world[rup] == 'O'){
-                    //loop dup then right until an O is found
-                    for( int i = rup+1; i <= width; i++) {
-                        countup++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                    //printf("it took me %d steps up right to find an O!", countup);
-                }
-                
-                //whichever takes less to do, execute
-
-                if (countdown < countup || countdown == countup){
-                    //keep going down until right is free
-                    do{                        
-                        return 3;
-                    }
-                    while(world[rright] == '#' && world[rdown] == 'O');
-
-                    //move the amount of steps needed to the opening
-                    for (int i=0; i<countdown;i++){
-                        return 2;
-                    }
-                }
-
-                if (countdown > countup){
-                    //keep going up until right is free
-                    do{                        
-                        return 1;
-                    }
-                    while(world[rright] == '#' && world[rup] == 'O');
-
-                    //move the amount of steps needed to the opening 
-                    for (int i=0; i<countup;i++){
-                        return 2;
-                    }
-                }
+    //DOWN
+    if ((vR-vT) < 0 && NoVertical == false){  
+        printf("DOWN");
+        //if there is an obstacle below R
+        if (world[rdown] == '#' || forbidden(rdown)) {
+            //check if it is cornered from the sides, if yes add to blacklist.
+            if (((world[rright]) == '#' || forbidden(rright)) && (world[rleft] == '#' || forbidden(rleft))){
+                blacklist(robot_index);
+                mleft=0; //reset
+                mright=0;
+                if(driveMode(world[rup])) return drivemode; //check for water
+                return up; //go up
             }
         }
-        while (lines < 1 && distance > 0);
+        //if right is free and left clear mark left available and right not
+        else  if ((world[rright]== '#' || forbidden(rright)) && (world[rleft] != '#')){
+            mright=0;
+            mleft=1;
+            blacklist(robot_index);
+        }
 
-        //LEFT
-        do  {printf("LEFT but R<T %d", lines); 
-            if (world[rleft]=='O'){
-                    return 4;
+        //if left blocked but right clear mark right available
+        else if ((world[rleft]== '#' || forbidden(rleft)) && (world[rright] != '#')){
+            mright=1;
+            mleft=0;
+            blacklist(robot_index);
+        }
+
+        //if both free make "available"
+        else if (world[rright] != '#' || forbidden(rright) == false) mright = 1;
+        else if (world[rleft] != '#' || forbidden(rleft) == false) mleft = 1;
+            
+        //action
+        if (mright == 1){
+            if (driveMode(world[rright])) return drivemode;
+            return right;
+        }
+            
+        else if (mleft == 1){
+        if (driveMode(world[rleft]))return drivemode;
+        return left;
+        }     
+            
+        //when no obstacles:
+        mleft=0;
+        mright=0;
+        noHorizontal=0;
+        if(driveMode(world[rup])) return drivemode;
+        return down;   
+    }
+        else {NoVertical = 1;} //temporary lock for Vmovement
+
+    //RIGHT
+    if((hR-hT) < 0 && noHorizontal == false) {
+        //if right is blocked
+        printf("GOING RIGHT");
+        if(world[rright]=='#' || forbidden(rright)){
+            //if blocked from up and down too, add to blacklist and go left
+            if ((world[rup] == '#' || forbidden(rup)) && (world[rdown]=='#' || forbidden(rdown))){ 
+                blacklist(robot_index);
+                mup = 0 ;
+                mdown = 0;
+                if (driveMode(world[rleft])) return drivemode;
+                return left;
             }
-            else if (world[rleft] == '#'){
-                //if left is blocked: look for an opening after going down and left, and count how many steps
-                if(world[rleft] == '#' && world[rdown] == 'O'){
-                    //loop down left until an O is found
-                    for( int i = rdown-1; i <= width; i++) {
-                        countdown++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                   // printf("it took me %d steps down left to find an O!", countdown);
-                }
 
-                //if left is blocked: look for an opening after going up then left, and count how many steps
-                if(world[rleft] == '#' && world[rup] == 'O'){
-                    //loop dup then left until an O is found
-                    for( int i = rup-1; i <= width; i++) {
-                        countup++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                    //printf("it took me %d steps up left to find an O!", countup);
-                }
-                
-                //whichever takes less to do, execute
-
-                if (countdown < countup || countdown == countup){
-                    //keep going down until left is free
-                    do{                        
-                        return 3;
-                    }
-                    while(world[rleft] == '#' && world[rdown] == 'O');
-
-                    //move the amount of steps needed to the opening
-                    for (int i=0; i<countdown;i++){
-                        return 4;
-                    }
-                }
-
-                if (countdown > countup){
-                    //keep going up until left is free
-                    do{                        
-                        return 1;
-                    }
-                    while(world[rleft] == '#' && world[rup] == 'O');
-
-                    //move the amount of steps needed to the opening 
-                    for (int i=0; i<countup;i++){
-                        return 4;
-                    }
-                }
+            //if up blocked but down is free, mark down available, up not
+            else if ((world[rup] == '#' || forbidden(rup)) && (world[rdown] != '#')){
+                mdown=1;
+                mup=0;
+                blacklist(robot_index);
             }
-	    }
-        while (lines < 1 && distance < 0);
+            //if down blocked and up free, up available, down not, don't come back there.
+            else if ((world[rdown] == '#' || forbidden(rdown)) && (world[rup] != '#')){
+                mup=1;
+                mdown=0;
+                blacklist(robot_index);
+            }
+
+            //if both available mark them both available
+            else if(world[rdown] != '#' || forbidden(rdown) != true) mup = 1;
+            else if(world[rup] != '#' || forbidden(rup) != true) mdown = 1;
+
+            if (mdown == true){
+                if (driveMode(world[rdown])) return drivemode;
+                return down;
+            }
+            
+            else if (mup == true) {
+                 if (driveMode(world[rup])) return drivemode;
+                 return up;
+            }
+        }
+
+        // when no obstacles:
+        mup=0;
+        mdown=0;
+        NoVertical=0;
+        if (driveMode(world[rright])) return drivemode;
+        return right;
     }
 
 
-
-
-
-
-
-
-
-
-    //if T has smaller position index than R in the array
-    else if (robot_index > target_index){
-        //distance between indexes of R and T
-       // safe(world,target_index, width, elements);
-        int distance = robot_index - target_index;
-        //count how many lines between R and T
-        for(int i = target_index; i < robot_index; ++i) { 
-            if (worldcpy[i] == '\n') {
-                lines++;
+    //LEFT
+    else if ((hR-hT) > 0 && noHorizontal ==0)  {
+        printf("MOVING LEFT");
+        //if left blocked 
+        if(world[rleft]=='#' || forbidden(rleft)){
+            //check if its blocked from up and down, add to blacklist if yes.
+            if ((world[rup] == '#' || forbidden(rup)) && (world[rdown]=='#' || forbidden(rdown))){ 
+                blacklist(robot_index);
+                mup = 0 ;
+                mdown = 0;
+                if (driveMode(world[rleft])) return drivemode;
+                return right;
             }
-        }
-
-        //UP
-        if(lines>0) { 
-            printf("UP %d\n", lines);
-            //go up until there is obstacle above R
-            if (world[rup] == 'O') {
-                 return 1;
+            //mark down available if only down is available
+            else if ((world[rup] == '#' || forbidden(rup)) && (world[rdown] == 'O' || world[rdown]=='~')){
+                mdown=1;
+                mup=0;
+                blacklist(robot_index);
             }
 
-            else if (world[rup] == '#'){
-                // if there is obstacle above R, and the left is free, check how many steps it would take to go left and then up
-                if(world[rup] == '#' && world[rleft] == 'O'){
-                    for( int i =(rleft - width - 2); i >= elements; (i-width-1)) {
-                        countleft++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                }
-                //same but for right
-                if(world[rup] == '#' && world[rright] == 'O'){
-                    for( int i =(rright - width); i >= elements; (i-width-1)) {
-                        countright++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                }
-
-                //if it takes less steps to go left, or its the same as right, go left then up
-                if (countleft < countright || countleft == countright) {
-                    do{return 4;}
-                    while(world[rup] == '#' && world[rleft] == 'O');
-
-                    for (int i=0; i<countleft;i++){
-                        return 1;
-                    }
-                }
-                //if it takes less steps to go right then up, do it
-                if (countleft > countright ) {
-                    do{return 2;}
-                    while(world[rup] == '#' && world[rright] == 'O');
-                    for (int i=0; i<countright;i++){
-                        return 1;
-                    }
-                }
+            //mark up available if only up is available
+            else if ((world[rdown] == '#' || forbidden(rdown)) && (world[rup] == 'O' || world[rup]=='~')){
+                mup=1;
+                mdown=0;
+                blacklist(robot_index);
             }
-        }
 
-      
+            //if both available mark them both
+            else if(world[rdown] != '#' || forbidden(rdown) != true) mdown = 1;
+            else if(world[rup] != '#' || forbidden(rup) != true) mup = 1;
 
-        //LEFT
-        do {
-            printf("LEFT %d\n", lines);
-            if (world[rleft]=='O'){
-                return 4;
+            if (mdown == 1){
+                if (driveMode(world[rdown])) return drivemode;
+                return down;
             }
-            else if (world[rleft]=='#'){
-                //if left is blocked: look for an opening after going down and left, and count how many steps
-                if(world[rleft] == '#' && world[rdown] == 'O'){
-                    //loop down left until an O is found
-                    for( int i = rdown-1; i >= width; i--) {
-                        countdown++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                   // printf("it took me %d steps down left to find an O!", countdown);
-                }
 
-                //if left is blocked: look for an opening after going up then left, and count how many steps
-                if(world[rleft] == '#' && world[rup] == 'O'){
-                    //loop dup then left until an O is found
-                    for( int i = rup-1; i >= width; i--) {
-                        countup++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                    //printf("it took me %d steps up left to find an O!", countup);
-                }
+            else if (mup==1) {
+                if (driveMode(world[rup])) return drivemode;
+                return up;
+            }
                 
-                //whichever takes less to do, execute
-
-                if (countdown < countup || countdown == countup){
-                    //keep going down until left is free
-                    do{                        
-                        return 3;
-                    }
-                    while(world[rleft] == '#' && world[rdown] == 'O');
-
-                    //move the amount of steps needed to the opening
-                    for (int i=0; i<countdown;i++){
-                        return 4;
-                    }
-                }
-
-                if (countdown > countup){
-                    //keep going up until left is free
-                    do{                        
-                        return 1;
-                    }
-                    while(world[rleft] == '#' && world[rup] == 'O');
-
-                    //move the amount of steps needed to the opening 
-                    for (int i=0; i<countup;i++){
-                        return 4;
-                    }
-                }
             }
-        }
-        while (lines ==0 && distance > 0);
+            // when no obstacles:
+            mup=0;
+            mdown=0;
+            NoVertical=0;
+            if (driveMode(world[rright])) return drivemode;
+            return left;
+    }
 
-        //RIGHT
-        do  {printf("RIGHT %d\n", lines);
-            if (world[rright]== 'O'){
-                return 2;
-            }
-            else if (world[rright]=='#'){
-            //if rright is blocked: look for an opening after going down and right, and count how many steps
-                if(world[rright] == '#' && world[rdown] == 'O'){
-                    //loop down right until an O is found
-                    for( int i = rdown+1; i <= width; i++) {
-                        countdown++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                   // printf("it took me %d steps down right to find an O!", countdown);
-                }
+    else{noHorizontal = true;} //temporary horizontal lock
 
-                //if right is blocked: look for an opening after going up then right, and count how many steps
-                if(world[rright] == '#' && world[rup] == 'O'){
-                    //loop dup then right until an O is found
-                    for( int i = rup+1; i <= width; i++) {
-                        countup++;
-                        if (world[i] == 'O') {
-                        break;
-                        }
-                    }
-                    //printf("it took me %d steps up right to find an O!", countup);
-                }
-                
-                //whichever takes less to do, execute
-
-                if (countdown < countup || countdown == countup){
-                    //keep going down until right is free
-                    do{                        
-                        return 3;
-                    }
-                    while(world[rright] == '#' && world[rdown] == 'O');
-
-                    //move the amount of steps needed to the opening
-                    for (int i=0; i<countdown;i++){
-                        return 2;
-                    }
-                }
-
-                if (countdown > countup){
-                    //keep going up until right is free
-                    do{                        
-                        return 1;
-                    }
-                    while(world[rleft] == '#' && world[rup] == 'O');
-
-                    //move the amount of steps needed to the opening 
-                    for (int i=0; i<countup;i++){
-                        return 2;
-                    }
-                }
-            }
-	    }
-        while (lines ==0 && distance < 0);
+    //if deadlock occur
+    if (NoVertical == true && noHorizontal == true )
+    {
+        printf("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        NoVertical = 0;
+        noHorizontal = 0;
+        mleft = 0;
+        mright = 0;
+        mup = 0;
+        mdown = 0;
+        goto checkpoint;
     }
 }
