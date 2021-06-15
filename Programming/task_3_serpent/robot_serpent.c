@@ -477,7 +477,4 @@ int move(char *world) {
         goto checkpoint;
     }
 
-    for (int j=0; j<200;j++){
-        printf("FORBIDDEN ARRAY!");
-    }
 }
