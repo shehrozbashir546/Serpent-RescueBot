@@ -80,10 +80,10 @@ int move(char *world) {
     hR = robot_index % 21;
     vR = (robot_index / 21) + 2;
 
-    int countdown=0;
-    int countup=0;
-    int countleft=0;
-    int countright=0;
+    int moveup=0;  
+    int moveright=0;
+    int movedown=0;
+    int moveleft=0;
 
     checkpoint:
     //if T has bigger y position index than R in the array
@@ -99,34 +99,47 @@ int move(char *world) {
             }
 
             //if both right and left are free, check how long it would take to go that direction then up
-            else if (world[rright] != '#' || forbidden(rright) == false) {
-                //loop goes on till the first O is found starting right up
-                for( int i =(rright - width); i < 1; (i-width-1)) {
+            if (world[rright] != '#' || forbidden(rright) == false) {
+                int i;
+                //to avoid infinite loop we have the conditions:
+                //if up then right is free, count straight up
+                if (world[rup+1] != '#') {i = (rup);}
+                //if not, start from up then right
+                else {i = (rup+1);}
+                //loop up till you find a free path and store that in moveright var.
+                for(i; i > 1; i= i-width-1) {
                     countright++;
-                    if (world[i] == 'O') break;
+                    moveright++;
+                    if (world[i] != '#') break;
                 }
-            }
+            } 
 
-            else if (world[rleft] != '#' || forbidden(rleft) == false) {
-                 for( int i =(rleft - width - 2); i <1; (i-width-1)) {
-                        countleft++;
-                        if (world[i] == 'O') break;
-                    }
-            }
+            if (world[rleft] != '#' || forbidden(rleft) == false) {
+                int i;
+                if (world[rup-1] != '#') {i =(rup);}
+                else {i = (rup-1);}
+            
+                for(i; i>1; i= i-width-1) {
+                    countleft++;
+                    moveleft++;
+                    if (world[i] != '#') break;
+                }
+            } 
             
             //if it takes less steps to go left, or its the same as right, go left then up
             if (countleft < countright || countleft == countright) {
                 //go left until up is clear
-                do{
-                    if (driveMode(world[rleft])) return drivemode;
+                do{ 
+                    if (driveMode(world[rleft])) return drivemode; 
                     return left;
                 }
-                while(world[rleft] == 'O' || world[rleft] == '~');
+                while(world[rleft] != '#');
                 //move up according to count
-                for (int i=0; i<countleft;i++){
+                for (int i=0; i<moveleft;i++){
                     return up;
                 }
             }
+            
             //if it takes less steps to go right then up, do it
             if (countleft > countright ) {
                 //go right until up is clear
@@ -134,9 +147,9 @@ int move(char *world) {
                     if (driveMode(world[rright])) return drivemode;
                     return right;
                 }
-                while(world[rright] == 'O' || world[rright] == '~');
+                while(world[rright] != '#');
                     
-                for (int i=0; i<countright;i++){
+                for (int i=0; i<moveright;i++){
                     if(driveMode(world[rup])) return drivemode;
                     return up;
                 }
@@ -164,16 +177,24 @@ int move(char *world) {
             //if obstacle down and right is clear
             if (world[rright] != '#' || forbidden(rright) == false) {
                 //check for opening down then right
-                for(int i =rright+width+1; i > 200; (i+width+1)) {
+                int i;
+                if (world[rdown+ 1] != '#') i = (rdown);
+                else i = (rdown+1);
+                for(i; i > 200; i=(i+width+1)) {
                     countright++;
-                    if (world[i] == 'O') break;
+                    moveright++;
+                    if (world[i] != '#') break;
                 }
             }
 
             if (world[rleft] != '#' || forbidden(rleft) == false) {
-                for(int i =(rleft+width+1); i > 200; (i+width+1)) {
-                    countright++;
-                    if (world[i] == 'O') break;
+                int i;
+                if (world[rdown- 1]  != '#') i = (rdown);
+                else i = (rdown-1);                
+                for(i; i > 200; i=(i+width+1)) {
+                    countleft++;
+                    moveleft++;
+                    if (world[i] != '#') break;
                 }
             }
             
@@ -181,11 +202,11 @@ int move(char *world) {
             if (countleft < countright || countleft == countright) {
                 do{
                     if (driveMode(world[rleft])) return drivemode;
-                    return 4;
+                    return left;
                 }
-                while((world[rleft] == 'O' || world[rleft] == '~') && forbidden(rleft) ==false);
+                while((world[rleft] != '#') && forbidden(rleft) == false);
                     
-                for (int i=0; i<countleft;i++){
+                for (int i=0; i<moveleft;i++){
                     if (driveMode(world[rdown])) return drivemode;
                     return down;
                 }
@@ -197,9 +218,9 @@ int move(char *world) {
                         if (driveMode(world[rright])) return drivemode;
                         return right;                    
                     }
-                    while((world[rup] == '#' || forbidden(rup)) && (world[rright] == 'O' || world[rright] == '~'));
+                    while((world[rup] == '#' || forbidden(rup)) && (world[rright]!= '#'));
                         
-                    for (int i=0; i<countright;i++){
+                    for (int i=0; i<moveright;i++){
                         if (driveMode(world[rdown])) return drivemode;
                         return down;
                     }
@@ -228,19 +249,25 @@ int move(char *world) {
 
         
             if(world[rdown] != '#' || forbidden(rdown) != true) {
-                countdown=0;
-                for( int i = rdown+1; i > 200; i++) {
+                int i;
+                if ((world[rdown+1]) != '#') {i = (rright);}
+                else if ((world[rdown+1]) == '#'){i = (rdown+1);};
+                for(i; i < 200; i++) {
                     countdown++;
-                    if (world[i] == 'O') break;
+                    movedown++;
+                    if (world[i] != '#') break;
                 }
                 
             }
 
             if(world[rup] != '#' || forbidden(rup) != true) {
-                countup=0;
-                for( int i = rup+1; i  > 200; i++) {
+                int i;
+                if (world[rup+1] != '#') i = (rright);
+                else i = (rup+1);                
+                for(i; i  < 200; i++) {
                     countup++;
-                    if (world[i] == 'O') break;
+                    moveup++;
+                    if (world[i] != '#') break;
                 }
             }
 
@@ -249,28 +276,28 @@ int move(char *world) {
 
             if (countdown < countup || countdown == countup){
                 //keep going down until right is free
-                do{  
-                    if(driveMode(world[rdown])) return drivemode;                      
+                do{   
+                    if(driveMode(world[rdown])) return drivemode;                  
                     return down;
                 }
-                    while(world[rdown] == 'O' || world[rdown] == '~');
-                    //move the amount of steps needed to the opening
-                    for (int i=0; i<countdown;i++){
-                        if(driveMode(world[rright])) return drivemode;
-                        return right;
-                    }
+                while(world[rdown]!= '#' && world[rright] == '#');  
+                //move the amount of steps needed to the opening
+                for (int k=0; k<movedown;k++){
+                    if(driveMode(world[rright])) return drivemode;
+                    return right;
                 }
+            }
 
-            else if (countdown > countup){
+            if (countdown > countup){
                 //keep going up until right is free
                 do{    
                     if(driveMode(world[rup])) return drivemode;
                     return up;
                 }
-                while(world[rleft] == '#' && world[rup] == 'O');
+                while(world[rup] != '#');
                 
                 //move the amount of steps needed to the opening 
-                for (int i=0; i<countup;i++){
+                for (int i=0; i<moveup;i++){
                     if(driveMode(world[rright])) return drivemode;
                     return right;
                 }
@@ -297,20 +324,28 @@ int move(char *world) {
 
  
             if(world[rdown] != '#' || forbidden(rdown) != true) {
+                countdown=0;
+                int i;
+                if (world[rdown] - 1 != '#') i = (rdown);
+                else i = (rdown-1);                   
                 //loop down left until an O is found
-                for( int i = rdown-1; i > 0; i--) {
+                for(i; i > 0; i--) {
                     countdown++;
-                    if (world[i] == 'O') break;
+                    if (world[i] != '#') break;
                 }
                // printf("it took me %d steps down left to find an O!", countdown);
             }
             
             //if left is blocked: look for an opening after going up then left, and count how many steps
             if(world[rup] != '#' || forbidden(rup) != true) {
+                countup=0;
+                int i;
+                if (world[rup] - 1 != '#') i = (rup);
+                else i = (rup-1);                   
                 //loop up then left until an O is found
-                for( int i = rup-1; i > 0; i--) {                        
+                for(i; i > 0; i--) {                        
                     countup++;
-                    if (world[i] == 'O') break;
+                    if (world[i] != '#') break;
                 }
                 //printf("it took me %d steps up left to find an O!", countup);
             }
@@ -322,10 +357,10 @@ int move(char *world) {
                     if(driveMode(world[rdown])) return drivemode;      
                     return down;
                 }
-                while(world[rdown] == 'O' || world[rdown] == '~');
+                while(world[rdown] != '#');
 
                 //move the amount of steps needed to the opening
-                for (int i=0; i<countdown;i++){
+                for (int i=0; i<movedown;i++){
                     if(driveMode(world[rleft])) return drivemode;
                     return left;
                 }
@@ -337,10 +372,10 @@ int move(char *world) {
                     if(driveMode(world[rup])) return drivemode;                  
                     return up;
                 }
-                while(world[rup] == 'O' || world[rup] == '~');
+                while(world[rup] != '#');
 
                 //move the amount of steps needed to the opening 
-                for (int i=0; i<countup;i++){
+                for (int i=0; i<moveup;i++){
                     if(driveMode(world[rleft])) return drivemode;
                     return left;
                 }
@@ -358,7 +393,7 @@ int move(char *world) {
     //if deadlock occur
     if (NoVertical == true && noHorizontal == true )
     {
-        printf("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        printf("\nSTUCK! Resetting!");
         NoVertical = 0;
         noHorizontal = 0;
         goto checkpoint;

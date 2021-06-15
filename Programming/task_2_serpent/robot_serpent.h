@@ -14,6 +14,10 @@ static int water = 0, land = 1;
 static int forbiddenlist[200];
 static int counter = 0;
 
+static int countdown=0;
+static int countup=0;
+static int countleft=0;
+static int countright=0;
 // Function declaration
 void blacklist(int blacklisted);
 int forbidden(int forbidden);
