@@ -227,7 +227,7 @@ int move(char *world) {
                 int i;
                 if (world[rdown+ 1] != '#' && world[rdown+1] != '*') i = (rdown);
                 else i = (rdown+1);
-                for(i; i > 200; i=(i+width+1)) {
+                for(i; i > 200; i=(i+width+1)) { 
                     countright++;
                     moveright++;
                     if (world[i] != '#' && world[i] != '*') break;
