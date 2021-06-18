@@ -6,7 +6,7 @@
 // ALLOWED RETURN VALUES:
 // 1: North, 2: East, 3: South, 4: West, 5: Toggle watern/land mode
 void blacklist(int blacklisted){
-    printf("Location blacklisted!");
+    printf("\nLocation blacklisted!\n");
     forbiddenlist[counter] = blacklisted; //mark location that surrounded by obstacle
     counter++;
 }
