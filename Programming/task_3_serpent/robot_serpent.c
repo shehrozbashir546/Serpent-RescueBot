@@ -6,6 +6,7 @@
 // ALLOWED RETURN VALUES:
 // 1: North, 2: East, 3: South, 4: West, 5: Toggle watern/land mode
 void blacklist(int blacklisted){
+    printf("Location blacklisted!");
     forbiddenlist[counter] = blacklisted; //mark location that surrounded by obstacle
     counter++;
 }
@@ -47,12 +48,11 @@ int move(char *world) {
     unsigned int elements = sizeof(worldcpy)/sizeof(worldcpy[0]);
     int robot_index=0;
     int target_index=0;
-    int xtarget;
+    int xtarget=0;
     int lines=0;
     int width=20;
 
-   /* for (robot_index; world[target_index] != 'T'; target_index++) {}
-    for (target_index; world[robot_index] != 'R'; robot_index++) {}*/
+
 
     for(int i = 0; i < elements; ++i) { //index of R
         if (world[i] == 'R') {
@@ -61,15 +61,13 @@ int move(char *world) {
         }
     }
 
-
-      
-    for(int i = 0; i < elements; ++i) { //index of X
+  
+        for(int i = 0; i < elements; ++i) { //index of X
         if (world[i] == 'X') {
             xtarget= i;
             break;
         }
-    }
-  
+        }
 
     for(int i = 0; i < elements; ++i) { //index of T
         if (world[i] == 'T') {
@@ -79,12 +77,13 @@ int move(char *world) {
     }
 
     //when R reaches T, make the new target X
-    if (target_index==0) {
-        target_index = xtarget;
-        //reset forbidden list
-        for (int j=0;j>200;j++){
+    if (target_index==0) {        
+        target_index = xtarget;       
+        if  (xtarget!= target_index) printf("RESETTING!");     
+        for (int j=0;j<200;j++){
             forbiddenlist[j]=0;
         }
+        //reset forbidden list
     }
     int rup = robot_index - width - 1;
     int rdown = robot_index + width + 1;
@@ -92,14 +91,29 @@ int move(char *world) {
     int rright = robot_index + 1;
     int rsurround[4] = {rup,rright,rdown,rleft};
 
-    //if robot has 3 obstacles around him, add to forbidden list.
+    //if robot has 3 obstacles around it, add location to forbidden list.
     int obstacle=0;
+    int free=0;
+    int freeDirection;
+    int freeLocation;
     for (int j=0; j<4;j++){
         if (world[rsurround[j]] == '#' || world[rsurround[j]] == '*') {
             obstacle++;
         }
+        if (world[rsurround[j]] != '#' && world[rsurround[j]] != '*'){
+            free++;
+            freeDirection = j+1;
+            freeLocation=world[rsurround[j]];
+        }
+
     } 
-    if (obstacle==3) blacklist(robot_index);
+    if (obstacle==3) {
+        blacklist(robot_index);
+        if(driveMode(freeLocation)) return drivemode; //change to water if water detected
+        return freeDirection; //go down
+        printf("\n free direction: %d \n free Location: %d", freeDirection, freeLocation);
+    }
+
 
     int hT; //horizontal T
     int vT; //vertical T
@@ -120,17 +134,12 @@ int move(char *world) {
 
     checkpoint:
     //if T has bigger y position index than R in the array
-    if((vR-vT) > 0 && NoVertical == false){ 
+    //UP
+    if((vR-vT) > 0 ){ 
         printf("going up! \n");
         //if there is an obstacle above R
         if (world[rup] == '#' || world[rup] == '*'|| forbidden(rup)) { 
             //check for obstacles on both sides too (if its cornered) and add it to the blacklist if yes
-            if (((world[rleft]) == '#' || world[rleft] == '*' || forbidden(rleft)) && (world[rright] == '#' || world[rright] == '*' || forbidden(rright))){
-                blacklist(robot_index);
-                if(driveMode(world[rdown])) return drivemode; //change to water if water detected
-                return down; //go down
-            }
-
             //if both right and left are free, check how long it would take to go that direction then up
             if ((world[rright] != '#' && world[rright] != '*') || forbidden(rright) == false) {
                 int i;
@@ -204,22 +213,16 @@ int move(char *world) {
         }
         
         //when no obstacles:
-        noHorizontal=0;
         if(driveMode(world[rup])) return drivemode;
         return up;
     }   
 
     //DOWN
-    if ((vR-vT) < 0 && NoVertical == false){  
+    if ((vR-vT) < 0){  
         printf("going down!\n");
         //if there is an obstacle below R
         if (world[rdown] == '#' || world[rdown] == '*' || forbidden(rdown)) {
             //check if it is cornered from the sides, if yes add to blacklist.
-            if (((world[rright]) == '#' || world[rright] == '*' || forbidden(rright)) && (world[rleft] == '#' || world[rleft] == '*'|| forbidden(rleft))){
-                blacklist(robot_index);
-                if(driveMode(world[rup])) return drivemode; //check for water
-                return up; //go up
-            }
 
             //if obstacle down and right is clear
             if ((world[rright] != '#' && world[rright] != '*') || forbidden(rright) == false) {
@@ -286,24 +289,17 @@ int move(char *world) {
             }
         }
         //when no obstacles:
-        noHorizontal=0;
         if(driveMode(world[rdown])) return drivemode;
         return down;   
     }
     
-    else {NoVertical = 1;} //temporary lock for Vmovement
 
     //RIGHT
-    if((hR-hT) < 0 && noHorizontal == false) {
+    if((hR-hT) < 0) {
         //if right is blocked
         printf("going right!\n");
         if(world[rright]=='#' || world[rright] == '*' || forbidden(rright)){
             //if blocked from up and down too, add to blacklist and go left
-            if ((world[rup] == '#' || world[rup] == '*' || forbidden(rup)) && (world[rdown]=='#' || world[rdown] == '*' || forbidden(rdown))){ 
-                blacklist(robot_index);
-                if (driveMode(world[rleft])) return drivemode;
-                return left;
-            }
 
             if((world[rdown] != '#' && world[rdown] != '*') || forbidden(rdown) != true) {
                 int i;
@@ -371,24 +367,16 @@ int move(char *world) {
             }
         }
 
-        NoVertical=0;
         if (driveMode(world[rright])) return drivemode;
         return right;
     }
 
 
     //LEFT
-    else if ((hR-hT) > 0 && noHorizontal == 0)  {
+    else if ((hR-hT) > 0)  {
         printf("going left!\n");
         //if left blocked 
-        if(world[rleft] == '#' || world[rleft] == '*' ){
-            //check if its blocked from up and down, add to blacklist if yes.
-            if ((world[rup] == '#' || world[rup] == '*' || forbidden(rup)) && (world[rdown]=='#' || world[rdown] == '*' || forbidden(rdown))){ 
-                blacklist(robot_index);
-                if (driveMode(world[rleft])) return drivemode;
-                return right;
-            }
-
+        if(world[rleft] == '#' || world[rleft] == '*'|| forbidden(rleft) ){
  
             if((world[rdown] != '#' && world[rdown] != '*') || forbidden(rdown) != true) {
                 countdown=0;
@@ -461,20 +449,10 @@ int move(char *world) {
         }
 
         // when no obstacles:
-        NoVertical=0;
         if (driveMode(world[rleft])) return drivemode;
         return left;
     }
 
-    else{noHorizontal = true;} //temporary horizontal lock
 
-    //if deadlock occur
-    if (NoVertical == true && noHorizontal == true )
-    {
-        printf("\nSTUCK! Resetting!");
-        NoVertical = 0;
-        noHorizontal = 0;
-        goto checkpoint;
-    }
 
 }
