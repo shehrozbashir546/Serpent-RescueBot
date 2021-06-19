@@ -6,6 +6,7 @@
 // ALLOWED RETURN VALUES:
 // 1: North, 2: East, 3: South, 4: West, 5: Toggle watern/land mode
 void blacklist(int blacklisted){
+    printf("\nLocation blacklisted!\n");
     forbiddenlist[counter] = blacklisted; //mark location that surrounded by obstacle
     counter++;
 }
@@ -77,12 +78,12 @@ int move(char *world) {
 
     //when R reaches T, make the new target X
     if (target_index==0) {        
-        target_index = xtarget;   
-        //reset forbidden list    
+        target_index = xtarget;             
+        //reset forbidden list
+        if  (xtarget!= target_index) printf("RESETTING!");     
         for (int j=0;j<200;j++){
             forbiddenlist[j]=0;
         }
-        
     }
     int rup = robot_index - width - 1;
     int rdown = robot_index + width + 1;
