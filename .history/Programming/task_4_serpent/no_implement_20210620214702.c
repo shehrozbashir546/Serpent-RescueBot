@@ -71,7 +71,6 @@ int move(char *world, int map_id) {
         NoVertical= 0; NoHorizontal = 0;
         badcounter = 0; goodcounter = 0;
         blacklist_reset=0; whitelist_reset=0;
-        water = 0, land = 1;
         countdown=0; countup=0; countleft=0; countright=0;
     }
     
