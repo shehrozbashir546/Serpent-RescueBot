@@ -11,7 +11,7 @@
 #define down_destroy 8 
 #define left_destroy 9
 #define dont_destroy 10
-#define destroy 11
+#define safe
 
 static int NoVertical= 0, NoHorizontal = 0;
 static int water = 0, land = 1;
