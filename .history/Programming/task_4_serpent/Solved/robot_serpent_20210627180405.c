@@ -191,6 +191,7 @@ int move(char *world, int map_id) {
     //UP
     if((vR-vT) > 0 && NoVertical == false){ 
         printf("going up! \n");
+        
         //if there is an obstacle above R
         if (world[rup] == '#' || forbidden(rup)) { 
             //if both right and left are free, check how long it would take to go that direction then up

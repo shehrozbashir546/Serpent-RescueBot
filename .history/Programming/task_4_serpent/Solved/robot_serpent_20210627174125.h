@@ -10,7 +10,7 @@
 #define right_destroy 7
 #define down_destroy 8 
 #define left_destroy 9
-#define dont_destroy 10
+
 
 static int NoVertical= 0, NoHorizontal = 0;
 static int water = 0, land = 1;
@@ -29,9 +29,9 @@ int forbidden(int forbidden);
 int move(char* world, int map_id);
 int driveMode(char infront);
 int destructable(char infront);
-int up_destructable(char *world, char infront);
-int right_destructable(char *world, char infront);
-int down_destructable(char *world, char infront);
-int left_destructable(char *world, char infront);
+int up_destructable(char infront);
+int right_destructable(char infront);
+int down_destructable(char infront);
+int left_destructable(char infront);
 //int safe(char *world, int target_index, int width, int elements);
 #endif // ROBOT_H

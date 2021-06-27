@@ -186,11 +186,13 @@ int move(char *world, int map_id) {
     int moveright=0;
     int movedown=0;
     int moveleft=0;
+printf("BAD %d %d %d %d" ,world[rup]-21, world[rup-21], robot_index,rup);
     checkpoint:
     //if T has bigger y position index than R in the array
     //UP
     if((vR-vT) > 0 && NoVertical == false){ 
         printf("going up! \n");
+        
         //if there is an obstacle above R
         if (world[rup] == '#' || forbidden(rup)) { 
             //if both right and left are free, check how long it would take to go that direction then up

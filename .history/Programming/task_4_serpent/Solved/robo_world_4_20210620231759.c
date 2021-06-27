@@ -375,7 +375,7 @@ int main() {
     };
 
     // Set the world to use
-    char *maps[] = {world13};
+    char *maps[] = {world1, world2, world3, world4, world5, world6, world7, world8, world9, world10, world11, world12, world13};
     unsigned long number_of_maps = sizeof(maps)/sizeof(*maps);
     char world[200];
     int energy_scores[number_of_maps];

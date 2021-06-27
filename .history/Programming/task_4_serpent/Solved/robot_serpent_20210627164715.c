@@ -35,41 +35,41 @@ int  driveMode(char infront){
 }
 
 int destructable(char infront){
-    if (infront == '*') return true;
+    if (infront == '*') {return true;}
     return false;
 }
 
 
 // functions to check if it is even worth destroying the obstacles in front (could be blocked)
-int up_destructable(char *world, char infront) {
-    if (destructable(world[infront])&&((world[infront-21]) != '#')) return up_destroy;
-    else if ((destructable(world[infront]) && ((world[infront-21]) == '#'))){
+int up_worth_destroying(char infront) {
+    if (destructable(infront)&&((infront-21) != '#')) return true;
+    else {
         blacklist(infront);
-        return dont_destroy;    
+        return false;
+    }
+
+}
+int right_worth_destroying(char infront) {
+    if (destructable(infront)&&((infront+1) != '#')) return true;
+    else {
+        blacklist(infront); 
+        return false;
     }
 }
 
-int right_destructable(char *world, char infront) {
-    if (destructable(world[infront])&&((world[infront+1]) != '#')) return right_destroy;
-    else if ((destructable(world[infront]) && (world[infront+1] == '#'))){
+int down_worth_destroying(char infront) {
+    if (destructable(infront)&&((infront+21) != '#')) return true;
+    else {
         blacklist(infront); 
-        return dont_destroy;
+        return false;
     }
 }
 
-int down_destructable(char *world, char infront) {
-    if (destructable(world[infront])&&((world[infront+21]) != '#')) return down_destroy;
-    else if ((destructable(infront) && (world[infront+21] == '#'))){
+int left_worth_destroying(char infront) {
+    if (destructable(infront)&&((infront-1) != '#')) return true;
+    else  {
         blacklist(infront); 
-        return dont_destroy;
-    }
-}
-
-int left_destructable(char *world,char infront) {
-    if (destructable(world[infront])&&((world[infront-1]) != '#')) return left_destroy;
-    else if ((destructable(world[infront]) && (world[infront-1] == '#'))){
-        blacklist(infront); 
-        return dont_destroy;
+        return false;
     }
 }
 
@@ -186,6 +186,7 @@ int move(char *world, int map_id) {
     int moveright=0;
     int movedown=0;
     int moveleft=0;
+
     checkpoint:
     //if T has bigger y position index than R in the array
     //UP
@@ -227,16 +228,16 @@ int move(char *world, int map_id) {
                     blacklist(robot_index); 
                     if (driveMode(world[rright])) return drivemode;
                     //only destroy the obstacle if its worth it 
-                    if (right_destructable(world,rright) == right_destroy) return right_destroy;
-                    if (right_destructable(world,rright) == dont_destroy) goto checkpoint;
+                    if (right_worth_destroying(world[rright])) return right_destroy;
+                    else if (right_worth_destroying(world[rright]) == false) goto checkpoint;
                     return right;  
                 }  
                 //go left until up is clear
                 do{                 
                     if (driveMode(world[rleft])) return drivemode; 
                     //check if obstacle must be destroyed, destroy if yes
-                    if (left_destructable(world,rleft) == left_destroy) return left_destroy;
-                    if (left_destructable(world,rleft) == dont_destroy) goto checkpoint;
+                    if (left_worth_destroying(world[rleft])) return left_destroy;
+                    else if (left_worth_destroying(world[rleft]) == false) goto checkpoint;
                     return left;
                 }
                 while(world[rleft] != '#' && forbidden(rleft) == false);                    
@@ -246,8 +247,8 @@ int move(char *world, int map_id) {
                     //check if we have to switch to water
                     if (driveMode(world[rup])) return drivemode; 
                     //is it worth destroying obstacle? destroy if yes
-                    if (up_destructable(world,rup) == up_destroy) return up_destroy;
-                    if (up_destructable(world,rup) == dont_destroy) goto checkpoint;
+                    if (up_worth_destroying(world[rup])) return up_destroy;
+                    else if (up_worth_destroying(world[rup]) == false) goto checkpoint;
                     return up;
                 }
             }
@@ -258,15 +259,15 @@ int move(char *world, int map_id) {
                     blacklist(robot_index); 
                     if (driveMode(world[rleft])) return drivemode;
                     //check if obstacle must be destroyed, destroy if yes
-                    if (left_destructable(world,rleft) == left_destroy) return left_destroy;
-                    if (left_destructable(world,rleft) == dont_destroy) goto checkpoint;
+                    if (left_worth_destroying(world[rleft])) return left_destroy;
+                    else if (left_worth_destroying(world[rleft]) == false) goto checkpoint;
                     return left;  
                 }  
                 //go right until up is clear
                 do{ 
                     if (driveMode(world[rright])) return drivemode;
-                    if (right_destructable(world,rright) == right_destroy) return right_destroy;
-                    if (right_destructable(world,rright) == dont_destroy) goto checkpoint;
+                    if (up_worth_destroying(world[rright])) return right_destroy;
+                    else if (right_worth_destroying(world[rright]) == false) goto checkpoint;
                     return right;
                     //if robot gets cornered, go other direction
                 }
@@ -275,8 +276,8 @@ int move(char *world, int map_id) {
                 for (int i=0; i<moveright;i++){
                     if(driveMode(world[rup])) return drivemode;
                     //is it worth destroying obstacle? destroy if yes
-                    if (up_destructable(world,rup) == up_destroy) return up_destroy;
-                    if (up_destructable(world,rup) == dont_destroy) goto checkpoint;
+                    if (up_worth_destroying(world[rup])) return up_destroy;
+                    else if (up_worth_destroying(world[rup]) == false) goto checkpoint;
                     return up;
                 }
                 }  
@@ -285,8 +286,8 @@ int move(char *world, int map_id) {
         //when no obstacles:
        
         if(driveMode(world[rup])) return drivemode;
-        if (up_destructable(world,rup) == up_destroy) return up_destroy;
-        if (up_destructable(world,rup) == dont_destroy) goto checkpoint;
+        if (up_worth_destroying(world[rup])) return up_destroy;
+        else if (up_worth_destroying(world[rup]) == false) goto checkpoint;
         return up; 
         NoHorizontal=0;
     }   
@@ -327,15 +328,15 @@ int move(char *world, int map_id) {
                 if (((world[rleft]) == '#' || forbidden(rleft))){
                     blacklist(robot_index); 
                     if (driveMode(world[rright])) return drivemode;
-                    if (right_destructable(world,rright) == right_destroy) return right_destroy;
-                    if (right_destructable(world,rright) == dont_destroy) goto checkpoint;
+                    if (right_worth_destroying(world[rright])) return right_destroy;
+                    else if (right_worth_destroying(world[rright]) == false) goto checkpoint;
                     return right;  
                 }  
                 do{                     
                     if (driveMode(world[rleft])) return drivemode;
                     //check if obstacle must be destroyed, destroy if yes
-                    if (left_destructable(world,rleft) == left_destroy) return left_destroy;
-                    if (left_destructable(world,rleft) == dont_destroy) goto checkpoint;
+                    if (left_worth_destroying(world[rleft])) return left_destroy;
+                    else if (left_worth_destroying(world[rleft]) == false) goto checkpoint;
                     return left;
                 }
                 while((world[rleft] != '#') && forbidden(rleft) == false);
@@ -343,8 +344,8 @@ int move(char *world, int map_id) {
 
                 for (int i=0; i<moveleft;i++){
                     if (driveMode(world[rdown])) return drivemode;
-                    if (down_destructable(world,rdown) == down_destroy) return down_destroy;
-                    if (down_destructable(world,rdown) == dont_destroy) goto checkpoint;
+                    if (down_worth_destroying(world[rdown])) return down_destroy;
+                    else if (down_worth_destroying(world[rdown]) == false) goto checkpoint;
                     return down;
                 }
             }
@@ -354,22 +355,22 @@ int move(char *world, int map_id) {
                 if (((world[rright]) == '#' || forbidden(rright))){
                     blacklist(robot_index);
                     //check if obstacle must be destroyed, destroy if yes
-                    if (left_destructable(world,rleft) == left_destroy) return left_destroy;
-                    if (left_destructable(world,rleft) == dont_destroy) goto checkpoint;
+                    if (left_worth_destroying(world[rleft])) return left_destroy;
+                    else if (down_worth_destroying(world[rdown]) == false) goto checkpoint;
                     return left;
                 }    
                 do{
                     if (driveMode(world[rright])) return drivemode;
-                    if (right_destructable(world,rright) == right_destroy) return right_destroy;
-                    if (right_destructable(world,rright) == dont_destroy) goto checkpoint;
+                    if (right_worth_destroying(world[rright])) return right_destroy;
+                    else if (right_worth_destroying(world[rright]) == false) goto checkpoint;
                     return right;                    
                 }
                 while(world[rright]!= '#' && forbidden(rright) == false);
 
                 for (int i=0; i<moveright;i++){
                     if (driveMode(world[rdown])) return drivemode;
-                    if (down_destructable(world,rdown) == down_destroy) return down_destroy;
-                    if (down_destructable(world,rdown) == dont_destroy) goto checkpoint;
+                    if (down_worth_destroying(world[rdown])) return down_destroy;
+                    else if (down_worth_destroying(world[rdown]) == false) goto checkpoint;
                     return down;
                 }
             }
@@ -377,8 +378,8 @@ int move(char *world, int map_id) {
         //when no obstacles:
         
         if(driveMode(world[rdown])) return drivemode;
-        if (down_destructable(world,rdown) == down_destroy) return down_destroy;
-        if (down_destructable(world,rdown)==true) goto checkpoint;
+        if (down_worth_destroying(world[rdown])) return down_destroy;
+        else if (down_worth_destroying(world[rdown]) == false) goto checkpoint;
         return down;   
         NoHorizontal=0;
     }
@@ -423,23 +424,23 @@ int move(char *world, int map_id) {
                     blacklist(robot_index); 
                     if (driveMode(world[rup])) return drivemode;
                     //is it worth destroying obstacle? destroy if yes
-                    if (up_destructable(world,rup) == up_destroy) return up_destroy;
-                    if (up_destructable(world,rup) == dont_destroy) goto checkpoint;
+                    if (up_worth_destroying(world[rup])) return up_destroy;
+                    else if (up_worth_destroying(world[rup]) == false) goto checkpoint;
                     return up;  
                 }  
                 //keep going down until right is free
                 do{   
                     if(driveMode(world[rdown])) return drivemode;   
-                    if (down_destructable(world,rdown) == down_destroy) return down_destroy;
-                    if (down_destructable(world,rdown) == dont_destroy) goto checkpoint;
+                    if (down_worth_destroying(world[rdown])) return down_destroy;
+                    else if (down_worth_destroying(world[rdown]) == false) goto checkpoint;
                     return down;
                 }
                 while(world[rdown]!= '#' && forbidden(rdown) == false);  
                 //move the amount of steps needed to the opening
                 for (int k=0; k<movedown;k++){
                     if(driveMode(world[rright])) return drivemode;
-                    if (right_destructable(world,rright) == right_destroy) return right_destroy;
-                    if (right_destructable(world,rright) == dont_destroy) goto checkpoint;
+                    if (right_worth_destroying(world[rright])) return right_destroy;
+                    else if (right_worth_destroying(world[rright]) == false) goto checkpoint;
                     return right;
                 }
             }
@@ -448,16 +449,16 @@ int move(char *world, int map_id) {
                 if (((world[rup]) == '#' || forbidden(rup))){
                     blacklist(robot_index); 
                     if (driveMode(world[rdown])) return drivemode;
-                    if (down_destructable(world,rdown) == down_destroy) return down_destroy;
-                    if (down_destructable(world,rdown) == dont_destroy) goto checkpoint;
+                    if (down_worth_destroying(world[rdown])) return down_destroy;
+                    else if (down_worth_destroying(world[rdown]) == false) goto checkpoint;
                     return down;  
                 }  
                 //keep going up until right is free
                 do{    
                     if(driveMode(world[rup])) return drivemode;
                     //is it worth destroying obstacle? destroy if yes
-                    if (up_destructable(world,rup) == up_destroy) return up_destroy;
-                    if (up_destructable(world,rup) == dont_destroy) goto checkpoint;
+                    if (up_worth_destroying(world[rup])) return up_destroy;
+                    else if (up_worth_destroying(world[rup]) == false) goto checkpoint;
                     return up;
                 }
                 while(world[rup] != '#' && forbidden(rup) == false);
@@ -465,8 +466,8 @@ int move(char *world, int map_id) {
                 //move the amount of steps needed to the opening 
                 for (int i=0; i<moveup;i++){
                     if(driveMode(world[rright])) return drivemode;
-                    if (right_destructable(world,rright) == right_destroy) return right_destroy;
-                    if (right_destructable(world,rright) == dont_destroy) goto checkpoint;
+                    if (right_worth_destroying(world[rright])) return right_destroy;
+                    else if (right_worth_destroying(world[rright]) == false) goto checkpoint;
                     return right;
                 }
             }
@@ -474,8 +475,8 @@ int move(char *world, int map_id) {
 
        
         if (driveMode(world[rright])) return drivemode;
-        if (right_destructable(world,rright) == right_destroy) return right_destroy;
-        if (right_destructable(world,rright) == dont_destroy) goto checkpoint;
+        if (right_worth_destroying(world[rright])) return right_destroy;
+        else if (right_worth_destroying(world[rright]) == false) goto checkpoint;
         return right; 
         NoVertical=0;
     }
@@ -521,15 +522,15 @@ int move(char *world, int map_id) {
                     blacklist(robot_index); 
                     if (driveMode(world[rup])) return drivemode;
                     //is it worth destroying obstacle? destroy if yes
-                    if (up_destructable(world,rup) == up_destroy) return up_destroy;
-                    if (up_destructable(world,rup) == dont_destroy) goto checkpoint;
+                    if (up_worth_destroying(world[rup])) return up_destroy;
+                    else if (up_worth_destroying(world[rup]) == false) goto checkpoint;
                     return up;  
                 }  
                 //keep going down until left is free
                 do{            
                     if(driveMode(world[rdown])) return drivemode;   
-                    if (down_destructable(world,rdown) == down_destroy) return down_destroy;
-                    if (down_destructable(world,rdown) == dont_destroy) goto checkpoint;
+                    if (down_worth_destroying(world[rdown])) return down_destroy;
+                    else if (down_worth_destroying(world[rdown]) == false) goto checkpoint;
                     return down;
                 }
                 while(world[rdown] != '#' && forbidden(rdown) == false);
@@ -537,8 +538,8 @@ int move(char *world, int map_id) {
                 for (int i=0; i<movedown;i++){
                     if(driveMode(world[rleft])) return drivemode;
                     //check if obstacle must be destroyed, destroy if yes
-                    if (left_destructable(world,rleft) == left_destroy) return left_destroy;
-                    if (left_destructable(world,rleft) == dont_destroy) goto checkpoint;
+                    if (left_worth_destroying(world[rleft])) return left_destroy;
+                    else if (left_worth_destroying(world[rleft]) == false) goto checkpoint;
                     return left;
                 }
             }
@@ -547,16 +548,16 @@ int move(char *world, int map_id) {
                 if (((world[rup]) == '#'|| forbidden(rup))){
                     blacklist(robot_index); 
                     if (driveMode(world[rdown])) return drivemode;
-                    if (down_destructable(world,rdown) == down_destroy) return down_destroy;
-                    if (down_destructable(world,rdown) == dont_destroy) goto checkpoint;
+                    if (down_worth_destroying(world[rdown])) return down_destroy;
+                    else if (down_worth_destroying(world[rdown]) == false) goto checkpoint;
                     return down;  
                 }                  
                 //keep going up until left is free
                 do{      
                     if(driveMode(world[rup])) return drivemode;    
                     //is it worth destroying obstacle? destroy if yes
-                    if (up_destructable(world,rup) == up_destroy) return up_destroy;
-                    if (up_destructable(world,rup) == dont_destroy) goto checkpoint;      
+                    if (up_worth_destroying(world[rup])) return up_destroy;
+                    else if (up_worth_destroying(world[rup]) == false) goto checkpoint;      
                     return up;
                 }
                 while(world[rup] != '#' &&  forbidden(rup) == false);
@@ -565,8 +566,8 @@ int move(char *world, int map_id) {
                 for (int i=0; i<moveup;i++){
                     if(driveMode(world[rleft])) return drivemode;
                     //check if obstacle must be destroyed, destroy if yes
-                    if (left_destructable(world,rleft) == left_destroy) return left_destroy;
-                    if (left_destructable(world,rleft) == dont_destroy) goto checkpoint;
+                    if (left_worth_destroying(world[rleft])) return left_destroy;
+                    else if (left_worth_destroying(world[rleft]) == false) goto checkpoint;
                     return left;
                 }
             }
@@ -576,8 +577,8 @@ int move(char *world, int map_id) {
         // when no obstacles:
         if (driveMode(world[rleft])) return drivemode;
         //check if obstacle must be destroyed, destroy if yes
-        if (left_destructable(world,rleft) == left_destroy) return left_destroy;
-        if (left_destructable(world,rleft) == dont_destroy) goto checkpoint;
+        if (left_worth_destroying(world[rleft])) return left_destroy;
+        else if (left_worth_destroying(world[rleft]) == false) goto checkpoint;
         return left;
         NoVertical=0;
     }
