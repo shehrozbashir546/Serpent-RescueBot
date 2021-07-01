@@ -87,6 +87,8 @@ int move(char *world) {
 
     checkpoint:
     //if T has bigger y position index than R in the array
+
+    //UP
     if((vR-vT) > 0 && NoVertical == false){ 
         printf("going up! \n");
         //if there is an obstacle above R
