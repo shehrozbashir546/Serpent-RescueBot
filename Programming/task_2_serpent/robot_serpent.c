@@ -326,27 +326,28 @@ int move(char *world) {
 
  
             if(world[rdown] != '#' || forbidden(rdown) != true) {
-                countdown=0;
+                movedown=0;
                 int i;
                 if (world[rdown] - 1 != '#') i = (rdown);
                 else i = (rdown-1);                   
                 //loop down left until an O is found
                 for(i; i > 0; i--) {
                     countdown++;
+                    movedown++;
                     if (world[i] != '#') break;
                 }
-               // printf("it took me %d steps down left to find an O!", countdown);
             }
             
             //if left is blocked: look for an opening after going up then left, and count how many steps
             if(world[rup] != '#' || forbidden(rup) != true) {
-                countup=0;
+                moveup=0;
                 int i;
                 if (world[rup] - 1 != '#') i = (rup);
                 else i = (rup-1);                   
                 //loop up then left until an O is found
                 for(i; i > 0; i--) {                        
                     countup++;
+                    moveup++;
                     if (world[i] != '#') break;
                 }
                 //printf("it took me %d steps up left to find an O!", countup);
