@@ -311,7 +311,7 @@ int move(char *world) {
 
 
     //LEFT
-    else if ((hR-hT) > 0 && noHorizontal == 0)  {
+    if ((hR-hT) > 0 && noHorizontal == 0)  {
         printf("going left!\n");
         //if left blocked 
         if(world[rleft]=='#' || forbidden(rleft)){
