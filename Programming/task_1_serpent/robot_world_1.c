@@ -72,9 +72,6 @@ int move(char *world) {
         //as long as R is above T, go down, until it reaches the same line.
         do {  
             for (int i=0; i<lines;i++) {
-                if (robot_index+1 =='#') {
-                    
-                }
                 return 3;
 	        }       
         }
