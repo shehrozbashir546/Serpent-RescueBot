@@ -134,10 +134,7 @@ int move(char *world, int map_id) {
     }    
         
     //reset forbidden list    
-    if (blacklist_reset == 1 ) { 
-        printf("\nResetting Blacklist!\n");           
-        for (int j=0;j<elements;j++) forbiddenlist[j]=0;
-    }
+    if (blacklist_reset == 1 ) { for (int j=0;j<elements;j++) forbiddenlist[j]=0;}
 
     int rup = robot_index - width - 1;
     int rdown = robot_index + width + 1;
@@ -497,7 +494,6 @@ int move(char *world, int map_id) {
                     countdown++;
                     if (world[i] != '#' &&  forbidden(i) == false) break;
                 }
-               //printf("it took me %d steps down left to find an O!\n countdown: %d", movedown, countdown);
             }
             
             //if left is blocked: look for an opening after going up then left, and count how many steps
@@ -512,7 +508,6 @@ int move(char *world, int map_id) {
                     countup++;
                     if (world[i] != '#' && forbidden(i) == false) break;
                 }
-                //printf("it took me %d steps up left to find an O! \n countup: %d", moveup, countup);
             }
 
 
