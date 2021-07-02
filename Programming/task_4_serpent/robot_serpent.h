@@ -29,10 +29,10 @@ void blacklist(int blacklisted);
 int forbidden(int forbidden);
 int move(char* world, int map_id);
 int driveMode(char infront);
-int destructable(char infront);
-int up_destructable(char *world, char infront);
-int right_destructable(char *world, char infront);
-int down_destructable(char *world, char infront);
-int left_destructable(char *world, char infront);
+int destructible(char infront);
+int up_destructible(char *world, char infront);
+int right_destructible(char *world, char infront);
+int down_destructible(char *world, char infront);
+int left_destructible(char *world, char infront);
 //int safe(char *world, int target_index, int width, int elements);
 #endif // ROBOT_H
