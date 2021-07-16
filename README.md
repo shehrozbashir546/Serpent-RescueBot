@@ -29,9 +29,7 @@ Serpent assists in rescue after environmental disasters, such as:
 ![Five-Layer Architecture Pattern](https://user-images.githubusercontent.com/67482490/121589194-15a3cb00-ca37-11eb-9a85-3ddc5c155211.png)
 
 
- ### Further Information About The Project
 
-task distribution 
 
 
 
